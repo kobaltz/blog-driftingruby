@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ruby on Rails 6.0 Beta 1 Deprecations</title>
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <script src="/javascripts/site.js"></script>
+  </head>
+  <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+    <div class="fixed inset-0 flex justify-center sm:px-8">
+      <div class="flex w-full max-w-7xl lg:px-8">
+        <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+      </div>
+    </div>
+    <div class="relative">
+      <header class="pointer-events-none relative z-50 flex flex-col">
+  <div class="top-0 z-10 h-16 pt-6">
+    <div class="sm:px-8 top-[var(--header-top,theme(spacing.6))] w-full">
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="relative flex gap-4">
+              <div class="flex flex-1">
+                <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
+                  <a aria-label="Home" class="pointer-events-auto" href="/">
+                    <img alt="" sizes="2.25rem"
+                      src="/images/profile.png"
+                      width="512" height="512" decoding="async" data-nimg="1"
+                      class="rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 h-9 w-9"
+                      style="color: transparent;"></a></div>
+              </div>
+              <div class="flex flex-1 justify-end md:justify-center">
+                <nav class="pointer-events-auto md:block">
+                  <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                    <li>
+                      <a href="/" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">About</a>
+                    </li>
+                    <li>
+                      <a href="/articles.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                    </li>
+                    <li>
+                      <a href="/projects.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex justify-end md:flex-1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <main>
+        <div class="sm:px-8 mt-16 lg:mt-32">
+          <div class="mx-auto max-w-7xl lg:px-8">
+            <div class="relative px-4 sm:px-8 lg:px-12">
+              <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="xl:relative">
+                  <div class="mx-auto max-w-2xl">
+                    <a href="/articles.html" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                        <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </a>
+                    <article>
+                      <header class="flex flex-col">
+                        <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                          Ruby on Rails 6.0 Beta 1 Deprecations
+                        </h1>
+                        <time datetime="2022-09-05" class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500">
+                          <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+                          <span class="ml-3">January 19, 2019</span>
+                        </time>
+                      </header>
+                      <div class="mt-8 prose dark:prose-invert">
+                        <p>About this time last year, I covered <a href="https://blog.driftingruby.com/ruby-on-rails-5-2-0-deprecations/">Ruby on Rails 5.2 Deprecations</a> and got lots of appreciative feedback. With the upcoming next major update of Ruby on Rails, I'd figure that I would do a new article and make it a tradition.</p>
+
+<p>NOTE: Ruby on Rails 6.0 will require Ruby 2.5.0. So if you're stuck on an older version of Ruby for whatever reason, you may want to consider holding off on updating your application to 6.0.</p>
+
+<p>I will likely update this article as later betas and release candidates come.</p>
+
+<h2 id="actionmailer">ActionMailer</h2>
+
+<p>Deprecate <code>ActionMailer::Base.receive</code> in favor of <a href="https://github.com/rails/rails/tree/master/actionmailbox">Action Mailbox</a>.</p>
+
+<p>Add <code>MailDeliveryJob</code> for delivering both regular and parameterized mail. Deprecate using <code>DeliveryJob</code> and <code>Parameterized::DeliveryJob</code>.</p>
+
+<h2 id="actionpack">ActionPack</h2>
+
+<p>Remove deprecated <code>fragment_cache_key</code> helper in favor of <code>combined_fragment_cache_key</code>.</p>
+
+<p>Remove deprecated methods in <code>ActionDispatch::TestResponse</code>.
+<code>#success?</code>, <code>missing?</code> and <code>error?</code> were deprecated in Rails 5.2 in favor of <code>#successful?</code>, <code>not_found?</code> and <code>server_error?</code>.</p>
+
+<p>Deprecate <code>ActionDispatch::Http::ParameterFilter</code> in favor of <code>ActiveSupport::ParameterFilter</code>.</p>
+
+<p>Controller level <code>force_ssl</code> has been deprecated in favor of <code>config.force_ssl</code>.</p>
+
+<h2 id="actionview">ActionView</h2>
+
+<p>Remove deprecated <code>image_alt</code> helper.</p>
+
+<p>Deprecate calling private model methods from view helpers.
+For example, in methods like <code>options_from_collection_for_select</code> and <code>collection_select</code> it is possible to call private methods from the objects used.</p>
+
+<h2 id="activerecord">ActiveRecord</h2>
+
+<p>Remove deprecated <code>#set_state</code> from the transaction object.</p>
+
+<p>Remove deprecated <code>#supports_statement_cache?</code> from the database adapters.</p>
+
+<p>Remove deprecated <code>#insert_fixtures</code> from the database adapters.</p>
+
+<p>Remove deprecated <code>ActiveRecord::ConnectionAdapters::SQLite3Adapter#valid_alter_table_type?</code>.</p>
+
+<p>Deprecate <code>config.activerecord.sqlite3.represent_boolean_as_integer</code>.</p>
+
+<p>Remove deprecated <code>ActiveRecord::Migrator.migrations_path=</code>.</p>
+
+<p>Remove deprecated <code>expand_hash_conditions_for_aggregates</code>.</p>
+
+<p>Deprecate passing <code>migrations_paths</code> to <code>connection.assume_migrated_upto_version</code>.</p>
+
+<p>Deprecate <code>ActiveRecord::Result#to_hash</code> in favor of <code>ActiveRecord::Result#to_a</code>.</p>
+
+<p>Deprecate <code>column_name_length</code>, <code>table_name_length</code>, <code>columns_per_table</code>, <code>indexes_per_table</code>, <code>columns_per_multicolumn_index</code>, <code>sql_query_length</code>, and <code>joins_per_query</code> methods in <code>DatabaseLimits</code>.</p>
+
+<p>Deprecate <code>update_attributes</code>/<code>!</code> in favor of <code>update</code>/<code>!</code>.</p>
+
+<h2 id="activestorage">ActiveStorage</h2>
+
+<p>Replace <code>config.active_storage.queue</code> with two options that indicate which queues analysis and purge jobs should use, respectively:</p>
+
+<ul>
+  <li><code>config.active_storage.queues.analysis</code></li>
+  <li><code>config.active_storage.queues.purge</code></li>
+</ul>
+
+<p><code>config.active_storage.queue</code> is preferred over the new options when it's set, but it is deprecated and will be removed in Rails 6.1.</p>
+
+<p>Add <code>ActiveStorage::Blob#open</code>, which downloads a blob to a tempfile on disk and yields the tempfile. Deprecate <code>ActiveStorage::Downloading</code>.</p>
+
+<p>Use the <a href="https://github.com/janko-m/image_processing">ImageProcessing</a> gem for Active Storage variants, and deprecate the MiniMagick backend.</p>
+
+<p>This means that variants are now automatically oriented if the original image was rotated. Also, in addition to the existing ImageMagick operations, variants can now use <code>:resize_to_fit</code>, <code>:resize_to_fill</code>, and other ImageProcessing macros. These are now recommended over raw <code>:resize</code>, as they also sharpen the thumbnail after resizing.</p>
+
+<p>The ImageProcessing gem also comes with a backend implemented on <a href="http://jcupitt.github.io/libvips/">libvips</a>, an alternative to ImageMagick which has significantly better performance than ImageMagick in most cases, both in terms of speed and memory usage. In Active Storage it's now possible to switch to the libvips backend by changing <code>Rails.application.config.active_storage.variant_processor</code> to <code>:vips</code>.</p>
+
+<h2 id="activesupport">ActiveSupport</h2>
+
+<p>Remove deprecated <code>Module#reachable?</code> method.</p>
+
+<p>Remove deprecated <code>#acronym_regex</code> method from <code>Inflections</code>.</p>
+
+<p>Deprecate <code>ActiveSupport::Multibyte::Unicode#pack_graphemes(array)</code> and <code>ActiveSuppport::Multibyte::Unicode#unpack_graphemes(string)</code> in favor of <code>array.flatten.pack("U*")</code> and <code>string.scan(/\X/).map(&amp;:codepoints)</code>, respectively.</p>
+
+<p>Deprecate <code>ActiveSupport::Multibyte::Chars.consumes?</code> in favor of <code>String#is_utf8?</code>.</p>
+
+<p>Deprecate <code>ActiveSupport::Multibyte::Unicode#normalize</code> and <code>ActiveSuppport::Multibyte::Chars#normalize</code> in favor of <code>String#unicode_normalize</code></p>
+
+<p>Deprecate <code>ActiveSupport::Multibyte::Unicode#downcase/upcase/swapcase</code> in favor of<code>String#downcase/upcase/swapcase</code>.</p>
+
+<p>Deprecate the use of <code>LoggerSilence</code> in favor of <code>ActiveSupport::LoggerSilence</code></p>
+
+<p>Deprecate using negative limits in <code>String#first</code> and <code>String#last</code>.</p>
+
+<p>Allow <code>Range#===</code> and <code>Range#cover?</code> on Range.</p>
+
+<p><code>Range#cover?</code> can now accept a range argument like <code>Range#include?</code> and <code>Range#===</code>. <code>Range#===</code> works correctly on Ruby 2.6. <code>Range#include?</code> is moved into a new file, with these two methods</p>
+
+<p><em>Requiring active_support/core_ext/range/include_range is now deprecated.</em> <em>Use <code>require "active_support/core_ext/range/compare_range"</code> instead.</em></p>
+
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="mt-32">
+  <div class="sm:px-8">
+    <div class="mx-auto max-w-7xl lg:px-8">
+      <div class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+              <div class="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <a href="/articles.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                <a href="/projects.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+              </div>
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">
+                © 2023 Kimura Innovations, LLC.
+                All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
+
+

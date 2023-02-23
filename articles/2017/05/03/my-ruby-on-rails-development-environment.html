@@ -1,0 +1,384 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>My Ruby on Rails Development Environment</title>
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <script src="/javascripts/site.js"></script>
+  </head>
+  <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+    <div class="fixed inset-0 flex justify-center sm:px-8">
+      <div class="flex w-full max-w-7xl lg:px-8">
+        <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+      </div>
+    </div>
+    <div class="relative">
+      <header class="pointer-events-none relative z-50 flex flex-col">
+  <div class="top-0 z-10 h-16 pt-6">
+    <div class="sm:px-8 top-[var(--header-top,theme(spacing.6))] w-full">
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="relative flex gap-4">
+              <div class="flex flex-1">
+                <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
+                  <a aria-label="Home" class="pointer-events-auto" href="/">
+                    <img alt="" sizes="2.25rem"
+                      src="/images/profile.png"
+                      width="512" height="512" decoding="async" data-nimg="1"
+                      class="rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 h-9 w-9"
+                      style="color: transparent;"></a></div>
+              </div>
+              <div class="flex flex-1 justify-end md:justify-center">
+                <nav class="pointer-events-auto md:block">
+                  <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                    <li>
+                      <a href="/" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">About</a>
+                    </li>
+                    <li>
+                      <a href="/articles.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                    </li>
+                    <li>
+                      <a href="/projects.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex justify-end md:flex-1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <main>
+        <div class="sm:px-8 mt-16 lg:mt-32">
+          <div class="mx-auto max-w-7xl lg:px-8">
+            <div class="relative px-4 sm:px-8 lg:px-12">
+              <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="xl:relative">
+                  <div class="mx-auto max-w-2xl">
+                    <a href="/articles.html" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                        <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </a>
+                    <article>
+                      <header class="flex flex-col">
+                        <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                          My Ruby on Rails Development Environment
+                        </h1>
+                        <time datetime="2022-09-05" class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500">
+                          <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+                          <span class="ml-3">May  3, 2017</span>
+                        </time>
+                      </header>
+                      <div class="mt-8 prose dark:prose-invert">
+                        <h1 id="forward">Forward</h1>
+
+<p>Sometimes we have to configure a new development machine, whether it is for ourselves or a friend. We often find that there are some little pieces of our environment that we have forgotten about or have neglected to document. This is my documentation for a ready-to-work development environment for Ruby on Rails.</p>
+
+<h1 id="about-me">About Me</h1>
+
+<p>I have been working with Ruby on Rails for several years (since 2009) and have tried various other platforms; yet always circling back to Ruby on Rails. In my early days, I developed on Ubuntu as I did not have nor could I afford an Apple. I moved back to a Windows machine and used my host operating system for my main development environment. I kept an Ubuntu server within a Virtual Machine (Oracle VirtualBox) where I would SSH into the VM and run any tasks. I used a shared network folder via Samba to access my files. While my environment was very productive, it didn't have the true native feel of a development environment. I got an Apple, where I now spend my days developing Ruby applications.</p>
+
+<p>I also run and maintain several pet projects; one of which is <a href="https://www.driftingruby.com">Drifting Ruby</a>. Some of the older apps that I use for different things around the house will need updating from time to time and might use an older version of Ruby with a different gem versions. So, having multiple Ruby versions and being able to switch them is very handy.</p>
+
+<p>While it is not required, I do have several servers in my basement that I use as a testing/staging environment as well as a code repository for my projects. I also back up all of my work to an offsite location in the event of a destroyed home.</p>
+
+<p>I come from a Systems Administrator background where I worked on Windows environments and Linux environments daily. As a Ruby on Rails developer, you should become comfortable with your Terminal as it can be a great tool.</p>
+
+<h1 id="about-this-guide">About This Guide</h1>
+
+<p>By no means are the topics or recommendations covered in this guide best practices. Please let me know if you have found anything that I should be doing differently. However, I have found that these steps work great for my productivity and comfort. Not everything in this guide is Ruby on Rails specific, but the majority does touch on the installation and configuration of Ruby on Rails or the development environment that I enjoy working in. This guide is based on MacOS Sierra 10.12.4. It should work for previous versions. If you do find some issues, please let me know and I"ll see about updating this guide.</p>
+
+<h1 id="software">Software</h1>
+
+<p>I have found that there are a few programs that makes life much easier whenever I setup a new development environment. Here are the basic applications that I feel is necessary for any new environment.</p>
+
+<p><strong>Homebrew</strong> - The missing package manager for OSX
+<strong>iTerm2</strong> - Alternative Terminal
+<strong>Spectacle</strong> - Hotkeys for Window Movement and Placement. This is an absolute must have if you're using multiple monitors.
+<strong>SublimeText</strong> - Preferred text editor
+<strong>Atom</strong> or <strong>Visual Studio Code</strong> are great free alternatives
+<strong>Google Chrome</strong> - Browser of choice</p>
+
+<h2 id="homebrew">Homebrew</h2>
+
+<p>Most developers that use an Apple probably rely on Homebrew as their quick goto for installing available packages. I'm no different. Let's get Homebrew installed. For the rest of the guide, most of our work is done in the Terminal. Where necessary, I'll indicate if you need to run something as `sudo` or not. If you do not see `sudo` prepended by any of the commands, it's safe to say that it is not required and/or recommended.</p>
+
+<pre><code>/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+</code></pre>
+
+<p>We can then use Homebrew to install the rest of our software applications.</p>
+
+<h2 id="iterm2">iTerm2</h2>
+
+<pre><code>brew cask install iterm2
+</code></pre>
+
+<h2 id="spectacle">Spectacle</h2>
+
+<pre><code>brew cask install spectacle
+</code></pre>
+
+<h2 id="editor">Editor</h2>
+
+<h3 id="sublime-text">Sublime Text</h3>
+
+<pre><code>brew cask install sublime-text
+</code></pre>
+
+<h3 id="atom">Atom</h3>
+
+<pre><code>brew cask install atom
+</code></pre>
+
+<h3 id="visual-studio-code">Visual Studio Code</h3>
+
+<pre><code>brew cask install visual-studio-code
+</code></pre>
+
+<h3 id="browser">Browser</h3>
+
+<pre><code>brew cask install google-chrome
+</code></pre>
+
+<h2 id="additional-packages">Additional Packages</h2>
+
+<p>Now that we have our core development tools installed, we can start installing our services.</p>
+
+<h3 id="mysql">MySQL</h3>
+
+<p>While most Ruby on Rails developers like using PostgreSQL for their database backend, I like and use MySQL. You can also use MariaDB if you wish which is very similar to MySQL.</p>
+
+<pre><code>brew install mysql
+</code></pre>
+
+<p>You can then start the MySQL service (and this will allow it to start whenever the computer is booted)</p>
+
+<pre><code>brew services start mysql
+</code></pre>
+
+<p>We then need to set our password for the mysql  server. Be sure to remember this password. We will set our password through the secure installation script that gets shipped with mysql .</p>
+
+<pre><code>mysql\_secure\_installation
+</code></pre>
+
+<p>You will be asked a series of questions. Other than the first question and setting the root password, I'll answer yes to the rest.</p>
+
+<h3 id="apache-optional">Apache (Optional)</h3>
+
+<p>phpMyAdmin is a handy and fairly light weight web interface to the MySQL server. However, it does rely on enabling Apache as well as PHP</p>
+
+<p>By default, Apache  comes with OSX 10.12.4 (as well as other previous versions). To start the service, type the below in your terminal.</p>
+
+<pre><code>sudo apachectl start
+</code></pre>
+
+<h3 id="php-optional">PHP (Optional)</h3>
+
+<p>By default, the `PHP` module is included with OSX. However, it is not enabled. Edit the `httpd.conf` file.</p>
+
+<pre><code>sudo nano /etc/apache2/httpd.conf
+</code></pre>
+
+<p>Look for the following line (Use `CTRL + W` to do a search within `nano`) and uncomment the line (remove the pound infront of it). You kids may call it a hashtag, but I'm still oldschool.</p>
+
+<pre><code>LoadModule php5\_module libexec/apache2/libphp5.so
+</code></pre>
+
+<p>Save the `httpd.conf` file. You can do this by typing `CTRL + X` within `nano`. It will prompt you to save, enter `y` and press enter (which will overwrite the existing file).</p>
+
+<pre><code>sudo apachectl restart
+</code></pre>
+
+<h3 id="phpmyadmin">PHPMyAdmin</h3>
+
+<p>While `MySQL Workbench` is an absolutely great tool, I do not care for it. I prefer using `PHPMyAdmin` in my development environmen. I usually keep `PHPMyAdmin` opened in a different tab, but have recently found myself using it less and less.</p>
+
+<p>Let's create a symlink to the `mysql.sock`.</p>
+
+<pre><code>sudo mkdir /var/mysql sudo
+ln -s /tmp/mysql.sock /var/mysql/mysql.sock
+</code></pre>
+
+<p>Install `PHPMyAdmin`</p>
+
+<pre><code>brew install homebrew/php/phpmyadmin
+</code></pre>
+
+<p>Let's edit our `httpd.conf` again.</p>
+
+<pre><code>sudo nano /etc/apache2/httpd.conf
+</code></pre>
+
+<p>Another tool that I use very often is called `puma-dev`. This allows me to quickly access and spin up a Ruby on Rails application without having to manually start the web service. I have found that there is sometimes a conflict with the `puma-dev` service and `apache`. To avoid this entirely, I change the port that `apache` will listen on.</p>
+
+<p>Look for the line `Listen 80` and change this to:</p>
+
+<pre><code>Listen 8888
+</code></pre>
+
+<p>At the very end of the `httpd.conf` file, copy and paste the following:</p>
+
+<pre><code>Alias /phpmyadmin /usr/local/share/phpmyadmin
+&lt;Directory /usr/local/share/phpmyadmin/&gt;
+  Options Indexes FollowSymLinks MultiViews
+  AllowOverride All
+  &lt;IfModule mod_authz_core.c&gt;
+    Require all granted
+  &lt;/IfModule&gt;
+  &lt;IfModule !mod_authz_core.c&gt;
+    Order allow,deny Allow from all
+  &lt;/IfModule&gt;
+&lt;/Directory&gt;
+</code></pre>
+
+<p>Restart `apache`</p>
+
+<pre><code>sudo apachectl restart
+</code></pre>
+
+<h3 id="oh-my-zsh">Oh My Zsh</h3>
+
+<p>If you prefer to have a fancier shell than `bash`, you can use `oh-my-zsh`. Purely a preference and an optional step. I will say though that the little `x` if changes that needs to be commited to version control and letting me know at a glance what branch I'm currently working on is a great tool to have if you spend a lot of time in the terminal.</p>
+
+<pre><code>curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+</code></pre>
+
+<p>You'll then need to provide your user password to change your terminal to ZSH.</p>
+
+<h3 id="rvm">RVM</h3>
+
+<p>While OSX 10.12.4 does come with a Ruby interpreter, I do not like using my system ruby version. Instead, I use RVM as my Ruby Version Manager. Other ones like `rbenv` and `chruby` are fine. All three will act similar as far as keeping your ruby environments separate. At the time of this guide, `Ruby 2.4.1` is the latest MRI version. This is the version that we will be using.</p>
+
+<pre><code>brew install gpg
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+\curl -sSL https://get.rvm.io | bash -s stable
+source /Users/$(whoami)/.rvm/scripts/rvm
+rvm install 2.4.1
+gem update --system
+</code></pre>
+
+<p>I often prefer to skip the installation of my gem documentation. I do this because it takes longer to download and install the gem. If I need to find the documentation of a gem, I'll usually look at the Github README of the gem or similar.</p>
+
+<pre><code>echo 'gem: --no-document' &gt;&gt; ~/.gemrc
+</code></pre>
+
+<p>Let's install Ruby on Rails!</p>
+
+<pre><code>gem install rails
+</code></pre>
+
+<h3 id="git">Git</h3>
+
+<p>Personally, since I use a privately hosted Gitlab environment for my version control, I install and configure `git` on my development machines. However, this is purely optional if you have your own way/method of version control.</p>
+
+<p>Be sure to change your `USERNAME` and `EMAILADDRESS` to your own information.</p>
+
+<pre><code>brew install git git config --global user.name "USERNAME" &amp;&amp; git config --global user.email "EMAILADDRESS"
+</code></pre>
+
+<h3 id="ssh-key">SSH Key</h3>
+
+<p>In order to pull and push my code to my git repository, I authenticate my machine with the version control server via an authorized ssh key.</p>
+
+<pre><code>ssh-keygen -t rsa -C "EMAILADDRESS" &amp;&amp; cat ~/.ssh/id\_rsa.pub
+</code></pre>
+
+<p>Copy and paste the SSH Key into your Version Control SSH Key section.</p>
+
+<h3 id="puma-dev">Puma-dev</h3>
+
+<p>Puma-dev is an amazing tool. It will spin up web servers so that you can quickly access your Ruby on Rails applications. For example, if I have a project called `testapp` under `~/Rails/testapp`, I can use `puma-dev` to create a link to this application. Even on a fresh reboot, I can go to `http://testapp.dev` or <code>https://testapp.dev</code> and it will launch my Ruby on Rails application. There is no need to go into your terminal to start the web service. You can also have multiple Ruby on Rails applications running at the same time with this. No more fuss with trying to find out which port is currently in use by another Ruby on Rails application.</p>
+
+<p>For a video tutorial, check out <a href="https://www.driftingruby.com/episodes/puma-dev-replacement-for-pow-and-prax">https://www.driftingruby.com/episodes/puma-dev-replacement-for-pow-and-prax</a></p>
+
+<p>brew install puma/puma/puma-dev sudo puma-dev -setup puma-dev -install</p>
+
+<p>`cd` into your Rails application and <code>ENTER</code>. We will then create our link with <code>puma-dev</code>. You can pass the optional <code>-n NAME</code> to customize the <code>domain.dev</code> that will be linked.</p>
+
+<pre><code>puma-dev link -n testapp .
+</code></pre>
+
+<p>You now have a symlink created under `~/.puma-dev` where it references to your Ruby on Rails application. You can now visit the `YOURAPP.dev` in the browser and it should load up.</p>
+
+<h3 id="elasticsearch-optional">ElasticSearch (Optional)</h3>
+
+<p>If you use ElasticSearch for full text searching, then here is the quick way to install it. ElasticSearch does require Java to be installed.</p>
+
+<pre><code>brew cask install java brew install elasticsearch brew services start elasticsearch
+</code></pre>
+
+<h3 id="redis-optional">Redis (Optional)</h3>
+
+<p>If you will be using <code>caching</code>, <code>sidekiq</code>, or <code>ActionCable</code>, you will need Redis.</p>
+
+<pre><code>brew install redis
+brew services start redis
+</code></pre>
+
+<h3 id="imagemagick-optional">ImageMagick (Optional)</h3>
+
+<p>If you upload images and resize them, you'll most likely use `minimagick`. A dependency of these tools is `ImageMagick`</p>
+
+<pre><code>brew install imagemagick
+</code></pre>
+
+<h1 id="pulling-an-existing-project">Pulling an Existing Project</h1>
+
+<p>I typically create a Rails folder in my home directory.</p>
+
+<p>mkdir Rails cd Rails git clone <remote repo=""></remote></p>
+
+<p>Cloning a repository from within my `Rails` folder, will create a new folder with that repository's code.</p>
+
+<p>From here, you're ready to go with your new development environment!</p>
+
+<h1 id="quick-notes-of-advice">Quick Notes of Advice</h1>
+
+<p>Within my Google Chrome Bookmarks Bar, I keep a few different things. My First thing is a folder in the bookmarks that keeps a shortcut to my `puma-dev` URLs. I also keep a bookmark to `http://localhost:8888/phpmyadmin` to quickly access `PHPMyAdmin`.</p>
+
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="mt-32">
+  <div class="sm:px-8">
+    <div class="mx-auto max-w-7xl lg:px-8">
+      <div class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+              <div class="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <a href="/articles.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                <a href="/projects.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+              </div>
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">
+                © 2023 Kimura Innovations, LLC.
+                All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
+
+

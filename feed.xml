@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Blog Name</title>
+  <subtitle>Blog subtitle</subtitle>
+  <id>http://blog.url.com/articles</id>
+  <link href="http://blog.url.com/articles"/>
+  <link href="http://blog.url.com/feed.xml" rel="self"/>
+  <updated>2023-02-22T19:00:00-05:00</updated>
+  <author>
+    <name>Blog Author</name>
+  </author>
+  <entry>
+    <title>Pushing Code to Multiple Repositories with Git</title>
+    <link rel="alternate" href="http://blog.url.com/articles/2023/02/23/pushing-to-multiple-repositories.html"/>
+    <id>http://blog.url.com/articles/2023/02/23/pushing-to-multiple-repositories.html</id>
+    <published>2023-02-22T19:00:00-05:00</published>
+    <updated>2023-02-23T11:30:44-05:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;Have you ever found yourself needing to publish your code to multiple repositories? Perhaps you have a static site hosted on Github Pages and want to have multiple domains point to it. Or maybe you manage multiple technology-related blogs and need to consolidate your content into a single blog, while still updating it on multiple domain names. In this article, we will explore a solution to push code to multiple repositories with minimal effort using Git.&lt;/p&gt;
+
+&lt;p&gt;As mentioned earlier, there are scenarios where you need to update your code on multiple repositories, and doing so manually can be time-consuming and error-prone. For instance, you may have a blog that you want to host on multiple domains, but instead of redirecting users to a new site, you prefer to update the content on both domains simultaneously. In such cases, you can use Git to push changes to multiple repositories with just a few commands.&lt;/p&gt;
+
+&lt;p&gt;To push code to multiple repositories, you first need to initialize your Git repository and push the changes to one of the repositories. In our example, let's say we push the changes to the repository kobaltz/blog-kobaltz.git. Now, we want to push the same code to another repository kobaltz/blog-driftingruby.git. To achieve this, we can add another push URL to our .git/config file using the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git remote set-url --add --push origin git@github.com:kobaltz/blog-driftingruby.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command adds a new push URL to the origin remote and sets it to the git@github.com:kobaltz/blog-driftingruby.git repository. Now, whenever you commit your changes and push them, Git will push the changes to both repositories.&lt;/p&gt;
+
+&lt;p&gt;You can verify that the push URL has been added by running the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git remote -v
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command will display the two push URLs under the origin remote, as shown below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;origin  git@github.com:kobaltz/blog-kimura.git (fetch)
+origin  git@github.com:kobaltz/blog-kimura.git (push)
+origin  git@github.com:kobaltz/blog-driftingruby.git (push)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, your code is being pushed to two repositories with minimal effort. If you ever want to remove one of the push URLs, you can do so by using the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git remote set-url --delete --push origin git@github.com:kobaltz/blog-driftingruby.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this article, we've explored a simple solution to push code to multiple repositories using Git. By adding a new push URL to the origin remote, we can push changes to multiple repositories with minimal effort. This technique can be useful in scenarios where you need to update your code on multiple domains or repositories. And, remember that you can use different services as well for the push URLs; one pointing to
+GitHub and another pointing to GitLab.&lt;/p&gt;
+
+&lt;p&gt;By consolidating your code base and keeping multiple repositories up to date, you can simplify your workflow and save time. Give this approach a try and see how it works for you. Happy coding!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Docker Builds are slow on M1</title>
+    <link rel="alternate" href="http://blog.url.com/articles/2022/04/09/docker-builds-are-slow-on-m1.html"/>
+    <id>http://blog.url.com/articles/2022/04/09/docker-builds-are-slow-on-m1.html</id>
+    <published>2022-04-08T20:00:00-04:00</published>
+    <updated>2023-02-18T01:05:28-05:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;This is a neat Docker trick for those who have an ARM development machine (Apple M1), but sometimes need to build x86/amd64 images locally to push up to a registry.&lt;/p&gt;
+
+&lt;p&gt;Sure, having a CI/CD platform to do this is probably ideal, but for little programs or just sometimes in general, it may be handy to know this.&lt;/p&gt;
+
+&lt;p&gt;If you have a spare Intel machine laying around, you can turn it into a build server. Get something like &lt;a href="https://docs.docker.com/engine/install/ubuntu/"&gt;Ubuntu installed&lt;/a&gt; on there and install the latest Docker. On your development machine, &lt;a href="https://www.ssh.com/academy/ssh/copy-id"&gt;copy your publish SSH key over to this build server.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;So now you you have your server set up and you want to build your Docker image for an x86/amd64 platform. Typically, you would run a command like this below to target the platform.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker buildx build -f Dockerfile --platform linux/amd64 .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And this will work, but what you'll notice is that this is an extremely slow process. The Apple Silicon chips are amazing and are the fastest machines I've ever used. However, when emulating the x86 instructions to build a docker image, it takes such a long time. I've seen this take over an hour on larger and more complex projects.&lt;/p&gt;
+
+&lt;p&gt;Just as an example. Here we have a very simple Ruby on Rails application that has little moving parts. I'm using things like &lt;code&gt;esbuild&lt;/code&gt; and &lt;code&gt;css-bundling&lt;/code&gt;, but nothing fancy. On the M1 chip, it took over 250 seconds to build the image.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Apple Silicon
+[+] Building 316.4s (23/23) FINISHED
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, on a AMD 5900X server, I have a Virtual Machine running on there which has Docker installed. Running the exact same project on there took much less time.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# AMD 5900X
+[+] Building 62.3s (24/24) FINISHED
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So, the main concern here is that I do not want to interrupt my normal process on how I build images or handle things. It would be a pain to push up my code, ssh into the build server, pull it down, and then build the image. This is a lot of steps, but luckily there is a MUCH easier way to do this.&lt;/p&gt;
+
+&lt;p&gt;Docker's buildx build command has a flag that we can specify a specific builder.&lt;/p&gt;
+
+&lt;p&gt;So, we can create this builder on our local machine. The nice part about this creation is that it is idempotent, so you can run this command many times without changing the result. All we have to do is to create a builder profile and in this case I have named it &lt;code&gt;amd64_builder&lt;/code&gt;.  Since this builder is a pool of resources, I give a name to for the VM. I'm also specifying the platform that I'm building against and then pass in the SSH url for my builder machine.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker buildx create \
+  --name amd64_builder \
+  --node linux_amd64_builder \
+  --platform linux/amd64 \
+  ssh://USERNAME@IP_ADDRESS_OF_BUILDER
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, I can build and push the image to the registry. The magical flag that we'll use is &lt;code&gt;--builder&lt;/code&gt; as we can now specify the builder VM. The rest of the buildx command is the same as we would expect.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker buildx build \
+  --builder amd64_builder \
+  --tag USERNAME/REPONAME:TAG \
+  --push .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In some cases, I've seen this go almost 10x faster than the amd64 emulation on the M1 chip. If you have a spare Intel/AMD machine laying around, this may be a worthwhile adventure.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Transferring Files</title>
+    <link rel="alternate" href="http://blog.url.com/articles/2022/04/08/transferring-files.html"/>
+    <id>http://blog.url.com/articles/2022/04/08/transferring-files.html</id>
+    <published>2022-04-07T20:00:00-04:00</published>
+    <updated>2023-02-18T01:04:07-05:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;Sometimes we get into situations where we need to remotely transfer a file. This file could be large or it could be tiny. This file may be sensitive or could be of little importance. Regardless, sending this file over to a remote location could still have its challenges. What if the file is coming from a headless server? Perhaps you have some logs that you want to inspect on your local machine instead of parsing through them remotely in an ssh session. This is where &lt;a href="https://magic-wormhole.readthedocs.io"&gt;magic-wormhole&lt;/a&gt; comes into play.&lt;/p&gt;
+
+&lt;h2 id="installation"&gt;Installation&lt;/h2&gt;
+
+&lt;h3 id="macos"&gt;macOS&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;brew install magic-wormhole&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id="linux-debianubuntu"&gt;Linux (Debian/Ubuntu)&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;sudo apt install magic-wormhole&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id="usage"&gt;Usage&lt;/h2&gt;
+
+&lt;p&gt;To send a file, you simply use the wormhole command and specify which file you wish to send.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;➜  ~ wormhole send server.log
+Sending 1.1 GB file named 'server.log'
+Wormhole code is: 5-hydraulic-snowslide
+On the other computer, please run:
+
+wormhole receive 5-hydraulic-snowslide
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we have specified which file we want to send, we've been provided with a "wormhole code" that we can use on the receiving end.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;wormhole receive 5-hydraulic-snowslide
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And that's all we have to do! On the receiving computer, we've downloaded the requested file! In the past, I would have used &lt;code&gt;scp&lt;/code&gt; or &lt;code&gt;ftp&lt;/code&gt; but remembering the syntax, while isn't too difficult, can prove to be challenging at times especially if nonstandard ports are used or if ports aren't opened up on the firewall to make the connection.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;➜  ~ wormhole receive 5-hydraulic-snowslide
+Receiving file (1.1 GB) into: server.log
+ok? (y/N): y
+Receiving (-&amp;gt;tcp:some-external-ip:65250)..
+ 80%|█████████████████▏               | 859M/1.07G [00:04&amp;lt;00:01, 206MB/s]
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Let's Encrypt Wildcard Cert</title>
+    <link rel="alternate" href="http://blog.url.com/articles/2021/02/10/lets-encrypt-wildcard-cert.html"/>
+    <id>http://blog.url.com/articles/2021/02/10/lets-encrypt-wildcard-cert.html</id>
+    <published>2021-02-09T19:00:00-05:00</published>
+    <updated>2023-02-18T01:02:12-05:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;I'm writing this more as documentation for myself as I have several domains which I often use as playgrounds for certain things. This could be a kubernetes environment or a docker cluster where I have several applications deployed, but don't want to set up an nginx site for each one of the apps that I deploy.&lt;/p&gt;
+
+&lt;p&gt;Recently, I found out about Portainer for managing a docker environment. Think of this as a kubernetes-lite. This isn't good for any kind of production use case, but does have some benefits for at home management of a local docker instance.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/articles/2021/02/10/lets-encrypt-wildcard-cert/PNG-image-90C9A493911C-1.png" alt="" /&gt;&lt;/p&gt;
+
+&lt;p&gt;So in this illustration, we have a request coming in on 443. This request could be using the domain name &lt;code&gt;c1.mydomain.com&lt;/code&gt; and there could be another request coming in from &lt;code&gt;c2.mydomain.com&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Previously, you would have a certificate for both subdomains and would need to set up the appropriate port forwarding for each subdomain to the appropriate server. This is a huge pain, so, instead, this is where a wildcard certificate can come in handy.&lt;/p&gt;
+
+&lt;p&gt;In this particular scenario, I have an nginx proxy which will be used to route all of the traffic coming in to my network. This is handy because I can use this reverse proxy for SSL termination and also routing the traffic to various servers based on the domain name. This doesn't have to be a powerful server. You could even use a Raspberry Pi to route this traffic. Again, this is for a home server and not really production grade.&lt;/p&gt;
+
+&lt;p&gt;You will need some prerequisites. And I also use CloudFlare's DNS for handling these wildcard domains. This is nice because certbot and cloudflare play pretty nicely to automatically verify the challenges via their API.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apt install certbot letsencrypt python3-certbot-dns-cloudflare
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you already have certbot and the necessary extensions installed, you can simply run this script to get a wildcard certificate.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo certbot certonly \
+     --cert-name mydomain.com \
+     --dns-cloudflare \
+     --dns-cloudflare-credentials /etc/letsencrypt/cloudflareapi.cfg \
+     --server https://acme-v02.api.letsencrypt.org/directory \
+     -d "*.mydomain.com" \
+     -d mydomain.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So, now we can configure our nginx proxy to take any request from this domain and forward it over to my docker host.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;server {
+  server_name *.mydomain.com;
+  server_name ~^(?&amp;lt;subdomain&amp;gt;.+)\.mydomain\.com$;
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+  # proxy_next_upstream error timeout http_502;
+  location / {
+    proxy_pass http://DOCKER_HOST_IP_ADDRESS;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_buffering off;
+  }
+  listen 443 ssl;
+  ssl_certificate /etc/letsencrypt/live/mydomain.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/mydomain.com/privkey.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+server {
+  return 301 https://$host$request_uri;
+  listen 80 ;
+  listen [::]:80 ;
+  server_name *.mydomain.com;
+  server_name ~^(?&amp;lt;subdomain&amp;gt;.+)\.mydomain\.com$;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In another blog article, I'll describe how I set up the Docker host to take in these requests from the nginx server.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Best Developer Tools Trick</title>
+    <link rel="alternate" href="http://blog.url.com/articles/2020/02/21/best-developer-tools-trick.html"/>
+    <id>http://blog.url.com/articles/2020/02/21/best-developer-tools-trick.html</id>
+    <published>2020-02-20T19:00:00-05:00</published>
+    <updated>2023-02-18T00:58:38-05:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;So to start, I am a Ruby person. I love Ruby and also Ruby on Rails. They are my language and framework of choice. However, like all things, over time the framework will evolve as well as the community.&lt;/p&gt;
+
+&lt;p&gt;With the evolution of Ruby on Rails over time, we have seen more and more Javascript added into the mix. We have seen Javascript Front End Frameworks introduced and it paved an entirely different route for us. A route that I don't necessarily agree with, but regardless, we're using more Javascript today than we have ever before.&lt;/p&gt;
+
+&lt;p&gt;It wasn't until the addition of StimulusJS did I really start to dive deeper into Javascript. I believe that good practices and sticking as close to the Ruby on Rails core as possible will promote healthy and maintainable applications with as few resources as possible.&lt;/p&gt;
+
+&lt;p&gt;Regardless of the path that we choose, Javascript is here to stay (for now), so it is important to know about the tools that we have available to us. Much like &lt;code&gt;puts&lt;/code&gt; debugging within Ruby, we have &lt;code&gt;console.log()&lt;/code&gt; in Javascript. This will get us pretty far with debugging or building out something within Javascript. However, we get into situations where we are out of our window scope in Javascript and things get a bit more difficult.&lt;/p&gt;
+
+&lt;p&gt;Here in lies our best Developer Tool Trick, and I've tested this with both Chrome and Firefox. So let's take a very simple Stimulus Controller where we have one target, and when it connects, we will log the target into our console so we can ensure it is registering properly.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import { Controller } from "stimulus"
+export default class extends Controller {
+  static targets = ["input"]
+  initialize() {  }
+  connect() {
+    console.log(this.inputTarget)
+  }
+  disconnect() { }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So, when we open the Developer Tools, we will see the console with the logged input.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/articles/2020/02/21/best-developer-tools-trick/image-15.png" alt="" /&gt;&lt;/p&gt;
+
+&lt;p&gt;So everything looks like it is working well. On a very simple case like this, we may continue on coding. However, other times, on more complicated issues, we may want to interact with this object. However, this is where things get to be a bit more difficult. Do we try to grab the element on the page and then follow through our code and recreate what we're trying to do in the Stimulus Controller? On a simple example, this will work. However, if you're trying to use another Javascript library like Tribute, Choices-JS, FullCalendar, etc. it can be very difficult since we don't have access to these libraries in our global scope. Instead, we're importing these into our application within the Stimulus Controller.&lt;/p&gt;
+
+&lt;p&gt;So if you find yourself in one of these situations, continue to log to the console the object that you would like to interact with. Then RIGHT CLICK on the object in the console and select &lt;code&gt;Store as global variable&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/articles/2020/02/21/best-developer-tools-trick/image-16.png" alt="" /&gt;&lt;/p&gt;
+
+&lt;p&gt;This will create a temporary variable of that object which will now allow you to interact with.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/articles/2020/02/21/best-developer-tools-trick/image-17.png" alt="" /&gt;&lt;/p&gt;
+
+&lt;p&gt;This feature has been around for a few years, but was one that I just happen to stumble upon the other day. It was completely changed the way I debug and approach problems within Javascript.&lt;/p&gt;
+
+&lt;p&gt;I hope that this serves as a reminder or a new trick in your toolset! Thanks for reading!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Stickers!</title>
+    <link rel="alternate" href="http://blog.url.com/articles/2019/03/06/stickers.html"/>
+    <id>http://blog.url.com/articles/2019/03/06/stickers.html</id>
+    <published>2019-03-05T19:00:00-05:00</published>
+    <updated>2023-02-18T00:56:08-05:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;Stickers are now live on &lt;a href="https://www.driftingruby.com/"&gt;Drifting Ruby&lt;/a&gt;! You can &lt;a href="https://www.driftingruby.com/profile"&gt;visit your account&lt;/a&gt; or sign up for one to see what stickers are available. Stickers are a way for tracking progress throughout Drifting Ruby.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/articles/2019/03/06/stickers/image-14.png" alt="" /&gt;&lt;/p&gt;
+
+&lt;p&gt;We will be adding various kinds of stickers in the future, but started off with some basic ones. Any suggestions are welcome if you'd like to see one added.&lt;/p&gt;
+
+&lt;h2 id="why-stickers"&gt;Why Stickers?&lt;/h2&gt;
+
+&lt;p&gt;I've always enjoyed playing games and sites that have this kind of functionality. One notable site is Stack Overflow with their Badges. Some time ago, I played World of Warcraft and they had Achievements. Working towards something was always fun and wanted to bring the same kind of fun to Drifting Ruby.&lt;/p&gt;
+
+&lt;h2 id="why-the-name"&gt;Why the name?&lt;/h2&gt;
+
+&lt;p&gt;Many sites have this kind of functionality. They all coin their own naming of these kinds of "badges". However, I wanted something unique and didn't like the term "Achievements". Some other thoughts were Rewards, Trophies, However, some of these terms felt like some may find it as a false sense of accomplishment. So, after some time, we came up with Stickers. After all, who doesn't like stickers.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hacking content_for to create a simple display helper</title>
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <script src="/javascripts/site.js"></script>
+  </head>
+  <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+    <div class="fixed inset-0 flex justify-center sm:px-8">
+      <div class="flex w-full max-w-7xl lg:px-8">
+        <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+      </div>
+    </div>
+    <div class="relative">
+      <header class="pointer-events-none relative z-50 flex flex-col">
+  <div class="top-0 z-10 h-16 pt-6">
+    <div class="sm:px-8 top-[var(--header-top,theme(spacing.6))] w-full">
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="relative flex gap-4">
+              <div class="flex flex-1">
+                <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
+                  <a aria-label="Home" class="pointer-events-auto" href="/">
+                    <img alt="" sizes="2.25rem"
+                      src="/images/profile.png"
+                      width="512" height="512" decoding="async" data-nimg="1"
+                      class="rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 h-9 w-9"
+                      style="color: transparent;"></a></div>
+              </div>
+              <div class="flex flex-1 justify-end md:justify-center">
+                <nav class="pointer-events-auto md:block">
+                  <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                    <li>
+                      <a href="/" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">About</a>
+                    </li>
+                    <li>
+                      <a href="/articles.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                    </li>
+                    <li>
+                      <a href="/projects.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex justify-end md:flex-1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <main>
+        <div class="sm:px-8 mt-16 lg:mt-32">
+          <div class="mx-auto max-w-7xl lg:px-8">
+            <div class="relative px-4 sm:px-8 lg:px-12">
+              <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="xl:relative">
+                  <div class="mx-auto max-w-2xl">
+                    <a href="/articles.html" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                        <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </a>
+                    <article>
+                      <header class="flex flex-col">
+                        <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                          Hacking content_for to create a simple display helper
+                        </h1>
+                        <time datetime="2022-09-05" class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500">
+                          <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+                          <span class="ml-3">July 22, 2017</span>
+                        </time>
+                      </header>
+                      <div class="mt-8 prose dark:prose-invert">
+                        <p>Update: Check out <a href="https://www.driftingruby.com/episodes/benchmarking-and-refactoring-the-content_for-view-helper">https://www.driftingruby.com/episodes/benchmarking-and-refactoring-the-content_for-view-helper</a> for a screencast update to this article where things are refactored to reduce technical debt.</p>
+
+<p>So, this isn't probably even the best way to do this, but I was playing around in a side project and wanted to see what I could do to have some consistency throughout my application; specifically around the breadcrumbs.</p>
+
+<p>So on this project, I have breadcrumbs whose HTML looks something like this. There's nothing fancy going on here, just some simple HTML. However, this would not be pretty, nor DRY, to repeat this throughout every single page of my project.</p>
+
+<pre><code>&lt;nav class="breadcrumb"&gt;
+  &lt;a class="breadcrumb-item" href="/"&gt;&lt;i class="fa fa-home"&gt;&lt;/i&gt; Home&lt;/a&gt;
+  &lt;span class="breadcrumb-item "&gt;Users&lt;/span&gt;
+  &lt;span class="breadcrumb-item active"&gt;Edit&lt;/span&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<p>This would ultimately look something like this where links are supported, and items are divided by a slash. If the item was the last one in the list, then it should have an <code>active</code> class.</p>
+
+<p><img src="/articles/2017/07/22/hacking-content-for-to-create-a-simple-display-helper/image-5.png" alt="" /></p>
+
+<p>So, naturally, I created a partial in the layouts folder called `_breadcrumbs.html.erb` and placed the code in there. However, I still had the issue where the breadcrumbs had to be dynamically updated on each page. Since this information is available at render time, I figured that I could somehow pass the navigation hierarchy from the rendered view to this partial. Ideally, I would have something within each view where I could customize the items in the list and then pass this into the partial.</p>
+
+<p>The solution I came up with and was okay with having within each view was this line of code at the top.</p>
+
+<p>&lt;%= content_for :breadcrumbs, ['Users', 'Edit'] %&gt;</p>
+
+<p>Now that I had some sort of hierarchy items listed, I needed to be able to parse and pull this information into my breadcrumbs partial.</p>
+
+<pre><code>&lt;nav class="breadcrumb"&gt;
+  &lt;%= link_to icon('home', 'Home'), root_path, class: 'breadcrumb-item' %&gt;
+  &lt;%= yield(:breadcrumbs) if content_for?(:breadcrumbs) %&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<p>Making progress!</p>
+
+<p><img src="/articles/2017/07/22/hacking-content-for-to-create-a-simple-display-helper/image-6.png" alt="" /></p>
+
+<p>However, it turns out that this is not an array even though it looks like one. Let's try to parse it out!</p>
+
+<pre><code>&lt;nav class="breadcrumb"&gt;
+  &lt;%= link_to icon('home', 'Home'), root_path, class: 'breadcrumb-item' %&gt;
+  &lt;% breadcrumbs = JSON.parse(sanitize yield(:breadcrumbs)) if content_for?(:breadcrumbs) %&gt;
+  &lt;%= breadcrumbs %&gt;
+  &lt;%= breadcrumbs.class %&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<p>Making more progress! Now, our <code>:breadcrumbs</code> is an Array.</p>
+
+<p><img src="/articles/2017/07/22/hacking-content-for-to-create-a-simple-display-helper/image-7.png" alt="" /></p>
+
+<p>So, now we can loop through each one of these in the breadcrumbs partial!</p>
+
+<pre><code>&lt;nav class="breadcrumb"&gt;
+  &lt;%= link_to icon('home', 'Home'), root_path, class: 'breadcrumb-item' %&gt;
+  &lt;% breadcrumbs = JSON.parse(sanitize yield(:breadcrumbs)) if content_for?(:breadcrumbs) %&gt;
+  &lt;% breadcrumbs.each do |breadcrumb| %&gt;
+    &lt;%= content_tag :span, breadcrumb, class: "breadcrumb-item" %&gt;
+  &lt;% end if content_for?(:breadcrumbs) %&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<p>So with looping through each one of these, we're almost there! Incase there was no <code>content_for</code> within the view, I wanted to make sure the application did not act funny so I ended the loop with a conditional check.</p>
+
+<p><img src="/articles/2017/07/22/hacking-content-for-to-create-a-simple-display-helper/image-8.png" alt="" /></p>
+
+<p>We are almost there! Now, we need to make the last item in the list a different color by adding the <code>active</code> class to the <code>span</code> element.</p>
+
+<pre><code>&lt;nav class="breadcrumb"&gt;
+  &lt;%= link_to icon('home', 'Home'), root_path, class: 'breadcrumb-item' %&gt;
+  &lt;% breadcrumbs = JSON.parse(sanitize yield(:breadcrumbs)) if content_for?(:breadcrumbs) %&gt;
+  &lt;% breadcrumbs.each do |breadcrumb| %&gt;
+    &lt;%= content_tag :span, breadcrumb, class: "breadcrumb-item #{breadcrumb.equal?(breadcrumbs.last) ? 'active' : nil}" %&gt;
+  &lt;% end if content_for?(:breadcrumbs) %&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<p>There we go!</p>
+
+<p><img src="https://blog.driftingruby.com/wp-content/uploads/2017/07/Screen-Shot-2017-07-22-at-12.14.04-AM.png" alt="" /></p>
+
+<p>While we could go ahead and call it quits, I wanted to take this a step further. Sometimes, it is extremely handy to have clickable breadcrumbs that can take a user to a different page. Not all breadcrumb items might have a relating page to display, so I needed to expand this so that we could dynamically display static text or some sort of link to a different page.</p>
+
+<p>So the idea was to have my normal array of items passed into the <code>:breadcrumbs</code>, but also provide an array for an item where the first element is the display text and the second is the path.</p>
+
+<pre><code>&lt;%= content_for :breadcrumbs, ['Static 1',['Dynamic 1', root_path], ['Dynamic 2', 'https://google.com'], 'Static 2'] %&gt;
+</code></pre>
+
+<p>Within the breadcrumbs partial, I created a case logic where we test the class of the item to see if it is a string or array. If the breadcrumb item is an array, then we break it out to <code>string</code> &amp; <code>link</code>  and then display it . Otherwise, if the item is a string, then we keep the normal action of displaying the <code>span</code> tag.</p>
+
+<pre><code>&lt;nav class="breadcrumb"&gt;
+  &lt;%= link_to icon('home', 'Home'), root_path, class: 'breadcrumb-item' %&gt;
+  &lt;% breadcrumbs = JSON.parse(sanitize yield(:breadcrumbs)) if content_for?(:breadcrumbs) %&gt;
+  &lt;% breadcrumbs.each do |breadcrumb| %&gt;
+    &lt;% case breadcrumb.class.to_s %&gt;
+    &lt;% when 'Array' %&gt;
+      &lt;% string, link = breadcrumb %&gt;
+      &lt;%= link_to string, link, class: "breadcrumb-item #{breadcrumb.equal?(breadcrumbs.last) ? 'active' : nil}" %&gt;
+    &lt;% when 'String' %&gt;
+      &lt;%= content_tag :span, breadcrumb, class: "breadcrumb-item #{breadcrumb.equal?(breadcrumbs.last) ? 'active' : nil}" %&gt;
+    &lt;% end %&gt;
+  &lt;% end if content_for?(:breadcrumbs) %&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<p>Things are looking great!</p>
+
+<p><img src="/articles/2017/07/22/hacking-content-for-to-create-a-simple-display-helper/image-9.png" alt="" /></p>
+
+<p>So, now on any page that I want to display a hierarchy of breadcrumbs item, I will simple make a <code>content_for :breadcrumbs</code> with an array of items.</p>
+
+<pre><code>&lt;%= content_for :breadcrumbs, [['Users', users_path],'Edit'] %&gt;
+</code></pre>
+
+<p>We could change this around a bit if we needed other stuff like icons in the breadcrumbs. If I did have to do this approach, an additional element to the breadcrumb item array could be added. However, at this point the array starts to get too complicated and hard to read. Instead, I would create a hash and then reference the items via their key. This could even be extracted to a helper method in <code>app/helpers</code>, but I was happy enough with this implementation for now since it did the job and works well. My main concern was having a fairly unobtrusive way to customize the breadcrumb items within the view.</p>
+
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="mt-32">
+  <div class="sm:px-8">
+    <div class="mx-auto max-w-7xl lg:px-8">
+      <div class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+              <div class="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <a href="/articles.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                <a href="/projects.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+              </div>
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">
+                © 2023 Kimura Innovations, LLC.
+                All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
+
+

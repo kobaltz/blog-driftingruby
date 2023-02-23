@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Configuring a Sentry Server on Ubuntu 16.04 LTS</title>
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <script src="/javascripts/site.js"></script>
+  </head>
+  <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+    <div class="fixed inset-0 flex justify-center sm:px-8">
+      <div class="flex w-full max-w-7xl lg:px-8">
+        <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+      </div>
+    </div>
+    <div class="relative">
+      <header class="pointer-events-none relative z-50 flex flex-col">
+  <div class="top-0 z-10 h-16 pt-6">
+    <div class="sm:px-8 top-[var(--header-top,theme(spacing.6))] w-full">
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="relative flex gap-4">
+              <div class="flex flex-1">
+                <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
+                  <a aria-label="Home" class="pointer-events-auto" href="/">
+                    <img alt="" sizes="2.25rem"
+                      src="/images/profile.png"
+                      width="512" height="512" decoding="async" data-nimg="1"
+                      class="rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 h-9 w-9"
+                      style="color: transparent;"></a></div>
+              </div>
+              <div class="flex flex-1 justify-end md:justify-center">
+                <nav class="pointer-events-auto md:block">
+                  <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                    <li>
+                      <a href="/" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">About</a>
+                    </li>
+                    <li>
+                      <a href="/articles.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                    </li>
+                    <li>
+                      <a href="/projects.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex justify-end md:flex-1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <main>
+        <div class="sm:px-8 mt-16 lg:mt-32">
+          <div class="mx-auto max-w-7xl lg:px-8">
+            <div class="relative px-4 sm:px-8 lg:px-12">
+              <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="xl:relative">
+                  <div class="mx-auto max-w-2xl">
+                    <a href="/articles.html" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                        <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </a>
+                    <article>
+                      <header class="flex flex-col">
+                        <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                          Configuring a Sentry Server on Ubuntu 16.04 LTS
+                        </h1>
+                        <time datetime="2022-09-05" class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500">
+                          <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+                          <span class="ml-3">November  1, 2017</span>
+                        </time>
+                      </header>
+                      <div class="mt-8 prose dark:prose-invert">
+                        <p>Sentry is an error tracking software product which has many different subscriptions options. Its software is open source and can be difficult to install if you are unfamiliar with the server side of things and hosting. They do offer a free hosted option for up to 10k events per month, 1 user and up to seven days retention.</p>
+
+<p>In this example, I'm using an updated Ubuntu 16.04.2 LTS install. To get started, we will install several packages. Note, this will install Redis and PostgreSQL. Typically, you would want to install these on their own servers.</p>
+
+<pre><code>curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install -y python-virtualenv python-setuptools python-pip libxslt1-dev gcc
+sudo apt-get install -y libffi-dev libjpeg-dev libxml2-dev libxslt-dev libyaml-dev python-dev
+sudo apt-get install -y python-setuptools python-dev libxslt1-dev gcc libffi-dev libjpeg-dev
+sudo apt-get install -y libxml2-dev libxslt-dev libyaml-dev libpq-dev nginx
+sudo apt-get install -y postgresql-server-dev-9.5 supervisor nodejs
+sudo apt-get install -y postgresql redis-server
+</code></pre>
+
+<p>We'll then create a sentry user that will be running the software. We will also allow this use to be a sudoer.</p>
+
+<pre><code>sudo adduser sentry
+sudo adduser sentry sudo
+</code></pre>
+
+<p>Next, we need to create our database. To do this, we will login as the postgres user and open the template1 database. We'll create a sentry database user and password. Be sure to change this password. We then need to create the <code>citext</code> extension.</p>
+
+<pre><code>sudo su - postgres
+psql template1
+create extension citext;
+create user sentry with password 'sentry';
+create database sentrydb with owner sentry;
+\q
+exit
+</code></pre>
+
+<p>We will then login as the sentry user and create a virtual environment for sentry.</p>
+
+<pre><code>sudo su - sentry
+virtualenv ~/sentry_app/
+source ~/sentry_app/bin/activate
+</code></pre>
+
+<p>Let's install sentry</p>
+
+<pre><code>pip install -U sentry
+sentry init
+</code></pre>
+
+<p>Let's configure the <code>sentry.conf.py</code> with <code>vi</code>, <code>nano</code> or whatever your preferred editor is.</p>
+
+<pre><code>nano ~/.sentry/sentry.conf.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'sentry.db.postgres',
+        'NAME': 'sentrydb',
+        'USER': 'sentry',
+        'PASSWORD': 'sentry', # &lt;-- or whatever you set with the psql command
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+</code></pre>
+
+<p>We're now ready to upgrade! This will migrate the database; building the tables and initial data. You will also be asked to create a user which will be your login information.</p>
+
+<pre><code>sentry upgrade
+</code></pre>
+
+<p>Let's log out of the <code>sentry</code> user and make <code>sentry</code>startup whenever the server boots.</p>
+
+<pre><code>exit
+sudo nano /etc/supervisor/conf.d/sentry.conf
+</code></pre>
+
+<p>We'll then paste this into <code>sentry.conf</code></p>
+
+<pre><code>[program:sentry-web]
+directory=/home/sentry/sentry_app/
+environment=SENTRY_CONF="/home/sentry/.sentry"
+command=/home/sentry/sentry_app/bin/sentry run web
+autostart=true
+autorestart=true
+redirect_stderr=true
+user=sentry stdout_logfile=syslog
+stderr_logfile=syslog
+[program:sentry-worker]
+directory=/home/sentry/sentry_app/
+environment=SENTRY_CONF="/home/sentry/.sentry"
+command=/home/sentry/sentry_app/bin/sentry run worker
+autostart=true
+autorestart=true
+redirect_stderr=true
+user=sentry
+stdout_logfile=syslog
+stderr_logfile=syslog
+[program:sentry-cron]
+directory=/home/sentry/sentry_app/
+environment=SENTRY_CONF="/home/sentry/.sentry"
+command=/home/sentry/sentry_app/bin/sentry run cron
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile=syslog
+stderr_logfile=syslog
+</code></pre>
+
+<p>We'll then update <code>supervisor</code> and check its status.</p>
+
+<pre><code>sudo supervisorctl reread
+sudo supervisorctl update
+
+sudo supervisorctl status
+</code></pre>
+
+<p>The app will then be available at <code>http://localhost:9000</code>.  If you want to set up SSL or run <code>sentry</code> on port 80, we can create an NGINX proxy.</p>
+
+<p>sudo nano /etc/nginx/sites-enabled/default</p>
+
+<p>Then replace the <code>location /</code> with the following.</p>
+
+<pre><code>location /
+{
+  proxy_pass http://localhost:9000;
+  proxy_redirect off;
+  proxy_set_header Host $host;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+}
+</code></pre>
+
+<p>If you need to configure your email settings, you can edit <code>/home/sentry/.sentry/config.yml</code>.</p>
+
+<p>You can also setup <code>crontab</code> to cleanup the sentry data periodically.</p>
+
+<pre><code>crontab -e
+0 3 * * * sentry cleanup --days=30
+</code></pre>
+
+<p>Your site will be live at <code>http://x.x.x.x/auth/login</code>. Start a project and and tracking errors now!</p>
+
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="mt-32">
+  <div class="sm:px-8">
+    <div class="mx-auto max-w-7xl lg:px-8">
+      <div class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+              <div class="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <a href="/articles.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                <a href="/projects.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+              </div>
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">
+                © 2023 Kimura Innovations, LLC.
+                All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
+
+

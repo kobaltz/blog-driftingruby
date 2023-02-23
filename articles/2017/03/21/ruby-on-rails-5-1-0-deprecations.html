@@ -1,0 +1,331 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ruby on Rails 5.1.0 Deprecations</title>
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <script src="/javascripts/site.js"></script>
+  </head>
+  <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+    <div class="fixed inset-0 flex justify-center sm:px-8">
+      <div class="flex w-full max-w-7xl lg:px-8">
+        <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+      </div>
+    </div>
+    <div class="relative">
+      <header class="pointer-events-none relative z-50 flex flex-col">
+  <div class="top-0 z-10 h-16 pt-6">
+    <div class="sm:px-8 top-[var(--header-top,theme(spacing.6))] w-full">
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="relative flex gap-4">
+              <div class="flex flex-1">
+                <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
+                  <a aria-label="Home" class="pointer-events-auto" href="/">
+                    <img alt="" sizes="2.25rem"
+                      src="/images/profile.png"
+                      width="512" height="512" decoding="async" data-nimg="1"
+                      class="rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 h-9 w-9"
+                      style="color: transparent;"></a></div>
+              </div>
+              <div class="flex flex-1 justify-end md:justify-center">
+                <nav class="pointer-events-auto md:block">
+                  <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                    <li>
+                      <a href="/" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">About</a>
+                    </li>
+                    <li>
+                      <a href="/articles.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                    </li>
+                    <li>
+                      <a href="/projects.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex justify-end md:flex-1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <main>
+        <div class="sm:px-8 mt-16 lg:mt-32">
+          <div class="mx-auto max-w-7xl lg:px-8">
+            <div class="relative px-4 sm:px-8 lg:px-12">
+              <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="xl:relative">
+                  <div class="mx-auto max-w-2xl">
+                    <a href="/articles.html" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                        <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </a>
+                    <article>
+                      <header class="flex flex-col">
+                        <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                          Ruby on Rails 5.1.0 Deprecations
+                        </h1>
+                        <time datetime="2022-09-05" class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500">
+                          <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+                          <span class="ml-3">March 21, 2017</span>
+                        </time>
+                      </header>
+                      <div class="mt-8 prose dark:prose-invert">
+                        <p>With Ruby on Rails 5.1.0 RC1 out now, its official release is probably right around the corner. In efforts to clean up some of the code base, some methods have been deprecated. If you have been keeping your apps up to date with the latest stable releases, chances are that you have noticed these for some time coming as the via the deprecation notices in the application logs.</p>
+
+<p>For easy searching purposes, I've parsed through the logs of all of the upcoming deprecations in Ruby on Rails 5.1.0. These were taken straight out of the CHANGELOGs.</p>
+
+<p>Check out <a href="https://www.driftingruby.com/episodes/ruby-on-rails-5-1-0-changes-and-new-features">https://www.driftingruby.com/episodes/ruby-on-rails-5-1-0-changes-and-new-features</a> for a screencast of some of the upcoming features in Ruby on Rails 5.1.0.</p>
+
+<h1 id="action-pack">Action Pack</h1>
+
+<p><a href="https://github.com/rails/rails/blob/v5.1.0.rc1/actionpack/CHANGELOG.md">https://github.com/rails/rails/blob/v5.1.0.rc1/actionpack/CHANGELOG.md</a></p>
+
+<h2 id="removed-deprecations">Removed Deprecations</h2>
+
+<ul>
+  <li>Remove deprecated <code>.to_prepare</code>, <code>.to_cleanup</code>, <code>.prepare!</code> and <code>.cleanup!</code> from <code>ActionDispatch::Reloader</code>.</li>
+  <li>Remove deprecated <code>ActionDispatch::Callbacks.to_prepare</code> and <code>ActionDispatch::Callbacks.to_cleanup</code>.</li>
+  <li>Remove deprecated <code>ActionController::Metal.call</code>.</li>
+  <li>Remove deprecated <code>ActionController::Metal#env</code>.</li>
+  <li>
+    <p>Remove deprecated support to non-keyword arguments in <code>ActionDispatch::IntegrationTest#process</code>, <code>#get</code>, <code>#post</code>, <code>#patch</code>, <code>#put</code>, <code>#delete</code>, and <code>#head</code>.</p>
+  </li>
+  <li>Remove deprecated <code>ActionDispatch::IntegrationTest#*_via_redirect</code>.</li>
+  <li>Remove deprecated <code>ActionDispatch::IntegrationTest#xml_http_request</code>.</li>
+  <li>Remove deprecated support for passing <code>:path</code> and route path as strings in <code>ActionDispatch::Routing::Mapper#match</code>.</li>
+  <li>Remove deprecated support for passing path as <code>nil</code> in <code>ActionDispatch::Routing::Mapper#match</code>.</li>
+  <li>Remove deprecated <code>cache_control</code> argument from <code>ActionDispatch::Static#initialize</code>.</li>
+  <li>Remove deprecated support to passing strings or symbols to the middleware stack.</li>
+  <li>Remove deprecated <code>host</code> and <code>port</code> ssl options.</li>
+  <li>Remove deprecated <code>const_error</code> argument in <code>ActionDispatch::Session::SessionRestoreError#initialize</code>.</li>
+  <li>Remove deprecated <code>#original_exception</code> in <code>ActionDispatch::Session::SessionRestoreError</code>.</li>
+  <li>Remove deprecated <code>ActionDispatch::ParamsParser</code>.</li>
+  <li>Remove deprecated <code>original_exception</code> and <code>message</code> arguments in<code>ActionDispatch::ParamsParser::ParseError#initialize</code>.</li>
+  <li>Remove deprecated <code>#original_exception</code> in <code>ActionDispatch::ParamsParser::ParseError</code>.</li>
+  <li>Remove deprecated access to mime types through constants.</li>
+  <li>Remove deprecated support to non-keyword arguments in <code>ActionController::TestCase#process</code>, <code>#get</code>, <code>#post</code>, <code>#patch</code>, <code>#put</code>, <code>#delete</code>, and <code>#head</code>.</li>
+  <li>Remove deprecated <code>xml_http_request</code> and <code>xhr</code> methods in <code>ActionController::TestCase</code>.</li>
+  <li>Remove deprecated methods in <code>ActionController::Parameters</code>.</li>
+  <li>Remove deprecated support to comparing a <code>ActionController::Parameters</code> with a <code>Hash</code>.</li>
+  <li>Remove deprecated support to <code>:text</code> in <code>render</code>.</li>
+  <li>Remove deprecated support to <code>:nothing</code> in <code>render</code>.</li>
+  <li>Remove deprecated support to <code>:back</code> in <code>redirect_to</code>.</li>
+  <li>Remove deprecated support to passing status as option <code>head</code>.</li>
+  <li>Remove deprecated support to passing original exception to <code>ActionController::BadRequest</code> and the <code>ActionController::BadRequest#original_exception</code> method.</li>
+  <li>Remove deprecated methods <code>skip_action_callback</code>, <code>skip_filter</code>, <code>before_filter</code>, <code>prepend_before_filter</code>, <code>skip_before_filter</code>, <code>append_before_filter</code>, <code>around_filter</code> <code>prepend_around_filter</code>, <code>skip_around_filter</code>, <code>append_around_filter</code>, <code>after_filter</code>, <code>prepend_after_filter</code>, <code>skip_after_filter</code> and <code>append_after_filter</code>.</li>
+</ul>
+
+<h2 id="new-deprecations">New Deprecations</h2>
+
+<ul>
+  <li>Deprecate <code>ActionDispatch::ParamsParser::ParseError</code> in favor of<code>ActionDispatch::Http::Parameters::ParseError</code>.</li>
+</ul>
+
+<h1 id="actionview">ActionView</h1>
+
+<p><a href="https://github.com/rails/rails/blob/v5.1.0.rc1/actionview/CHANGELOG.md">https://github.com/rails/rails/blob/v5.1.0.rc1/actionview/CHANGELOG.md</a></p>
+
+<h2 id="removed-deprecations-1">Removed Deprecations</h2>
+
+<ul>
+  <li>Removed deprecated <code>#original_exception</code> in <code>ActionView::Template::Error</code>.</li>
+</ul>
+
+<h2 id="new-deprecations-1">New Deprecations</h2>
+
+<ul>
+  <li>Deprecation: The Erubis handler will be removed in Rails 5.2, for the handful of folks using it directly.</li>
+</ul>
+
+<h1 id="activemodel">ActiveModel</h1>
+
+<p><a href="https://github.com/rails/rails/blob/v5.1.0.rc1/activemodel/CHANGELOG.md">https://github.com/rails/rails/blob/v5.1.0.rc1/activemodel/CHANGELOG.md</a></p>
+
+<h2 id="removed-deprecations-2">Removed Deprecations</h2>
+
+<ul>
+  <li>Remove deprecated behavior that halts callbacks when the return is false.</li>
+  <li>Remove unused <code>ActiveModel::TestCase</code> class.</li>
+  <li>Removed deprecated <code>:tokenizer</code> in the length validator.</li>
+  <li>Removed deprecated methods in <code>ActiveModel::Errors</code>.<code>#get</code>, <code>#set</code>, <code>[]=</code>, <code>add_on_empty</code> and <code>add_on_blank</code>.</li>
+</ul>
+
+<h1 id="activerecord">ActiveRecord</h1>
+
+<p><a href="https://github.com/rails/rails/blob/v5.1.0.rc1/activerecord/CHANGELOG.md">https://github.com/rails/rails/blob/v5.1.0.rc1/activerecord/CHANGELOG.md</a></p>
+
+<h2 id="removed-deprecations-3">Removed Deprecations</h2>
+
+<ul>
+  <li>Remove deprecated behavior that halts callbacks when the return is false.</li>
+  <li>Remove deprecated tasks: <code>db:test:clone</code>, <code>db:test:clone_schema</code>, <code>db:test:clone_structure</code>.</li>
+  <li>Remove deprecated <code>#uniq</code>, <code>#uniq!</code>, and <code>#uniq_value</code>.</li>
+  <li>Remove deprecated <code>#insert_sql</code>, <code>#update_sql</code>, and <code>#delete_sql</code>.</li>
+  <li>Remove deprecated <code>#use_transactional_fixtures</code> configuration.</li>
+  <li>Remove deprecated <code>#raise_in_transactional_callbacks</code> configuration.</li>
+  <li>Remove deprecated <code>#load_schema_for</code>.</li>
+  <li>Remove deprecated conditions parameter from <code>#destroy_all</code> and <code>#delete_all</code>.</li>
+  <li>Remove deprecated support to passing arguments to <code>#select</code> when a block is provided.</li>
+  <li>Remove deprecated support to query using commas on LIMIT.</li>
+  <li>Remove deprecated support to passing a class as a value in a query.</li>
+  <li>Remove deprecated <code>original_exception</code> argument in <code>ActiveRecord::StatementInvalid#initialize</code> and <code>ActiveRecord::StatementInvalid#original_exception</code>.</li>
+  <li><code>#tables</code> and <code>#table_exists?</code> return only tables and not views.All the deprecations on those methods were removed.</li>
+  <li>Remove deprecated <code>name</code> argument from <code>#tables</code>.</li>
+  <li>Remove deprecated support to passing a column to <code>#quote</code>.</li>
+  <li>Remove deprecated force reload argument in singular and collection association readers.</li>
+  <li>Remove deprecated <code>activerecord.errors.messages.restrict_dependent_destroy.one</code> and <code>activerecord.errors.messages.restrict_dependent_destroy.many</code> i18n scopes.</li>
+</ul>
+
+<h2 id="new-deprecations-2">New Deprecations</h2>
+
+<ul>
+  <li>Deprecate <code>Migrator.schema_migrations_table_name</code>.</li>
+  <li>Deprecate <code>supports_migrations?</code> on connection adapters.</li>
+  <li>Deprecate using <code>#quoted_id</code> in quoting.</li>
+  <li>Deprecate passing <code>default</code> to <code>index_name_exists?</code>.</li>
+  <li>Deprecate <code>supports_primary_key?</code> on connection adapters since it's been long unused and unsupported.</li>
+  <li>Deprecate locking records with unpersisted changes.</li>
+  <li>Deprecate <code>ColumnDumper#migration_keys</code>.</li>
+  <li>Deprecate <code>initialize_schema_migrations_table</code> and <code>initialize_internal_metadata_table</code>.</li>
+  <li>Deprecate passing a class to the <code>class_name</code> because it eagerloads more classes than necessary and potentially creates circular dependencies.</li>
+  <li>Deprecate passing <code>name</code> to <code>indexes</code>.</li>
+  <li>Deprecate passing arguments and block at the same time to <code>ActiveRecord::QueryMethods#select</code>.</li>
+  <li>Deprecate <code>sanitize_conditions</code>. Use <code>sanitize_sql</code> instead.</li>
+</ul>
+
+<h1 id="activesupport">ActiveSupport</h1>
+
+<p><a href="https://github.com/rails/rails/blob/v5.1.0.rc1/activesupport/CHANGELOG.md">https://github.com/rails/rails/blob/v5.1.0.rc1/activesupport/CHANGELOG.md</a></p>
+
+<h2 id="removed-deprecations-4">Removed Deprecations</h2>
+
+<ul>
+  <li>Remove deprecated behavior that halts callbacks when the return is false.</li>
+  <li>Remove deprecated class <code>ActiveSupport::Concurrency::Latch</code>.</li>
+  <li>Remove deprecated separator argument from <code>parameterize</code>.</li>
+  <li>Remove deprecated method <code>Numeric#to_formatted_s</code>.</li>
+  <li>Remove deprecated method <code>alias_method_chain</code>.</li>
+  <li>Remove deprecated constant <code>MissingSourceFile</code>.</li>
+  <li>Remove deprecated methods <code>Module.qualified_const_defined?</code>, <code>Module.qualified_const_get</code> and <code>Module.qualified_const_set</code>.</li>
+  <li>Remove deprecated <code>:prefix</code> option from <code>number_to_human_size</code>.</li>
+  <li>Remove deprecated method <code>ActiveSupport::HashWithIndifferentAccess.new_from_hash_copying_default</code>.</li>
+  <li>Remove deprecated file <code>active_support/core_ext/time/marshal.rb</code>.</li>
+  <li>Remove deprecated file <code>active_support/core_ext/struct.rb</code>.</li>
+  <li>Remove deprecated file <code>active_support/core_ext/module/method_transplanting.rb</code>.</li>
+  <li>Remove deprecated method <code>Module.local_constants</code>.</li>
+  <li>Remove deprecated file <code>active_support/core_ext/kernel/debugger.rb</code>.</li>
+  <li>Remove deprecated method <code>ActiveSupport::Cache::Store#namespaced_key</code>.</li>
+  <li>Remove deprecated method <code>ActiveSupport::Cache::Strategy::LocalCache::LocalStore#set_cache_value</code>.</li>
+  <li>Remove deprecated method <code>ActiveSupport::Cache::MemCacheStore#escape_key</code>.</li>
+  <li>Remove deprecated method <code>ActiveSupport::Cache::FileStore#key_file_path</code>.</li>
+  <li>Remove deprecated arguments in <code>assert_nothing_raised</code>.</li>
+</ul>
+
+<h2 id="new-deprecations-3">New Deprecations</h2>
+
+<ul>
+  <li>Deprecate implicit coercion of <code>ActiveSupport::Duration</code>Currently <code>ActiveSupport::Duration</code> implicitly converts to a seconds value when used in a calculation except for the explicit examples of addition and subtraction where the duration is the receiver, e.g: » 2 * 1.day =&gt; 172800</li>
+</ul>
+
+<p>This results in lots of confusion especially when using durations with dates because adding/subtracting a value from a date treats integers as a day and not a second, e.g:» Date.today =&gt; Wed, 01 Mar 2017 » Date.today + 2 * 1.day =&gt; Mon, 10 Apr 2490</p>
+
+<p>To fix this we're implementing <code>coerce</code> so that we can provide a deprecation warning with the intent of removing the implicit coercion in Rails 5.2, e.g:» 2 * 1.day DEPRECATION WARNING: Implicit coercion of ActiveSupport::Duration to a Numeric is deprecated and will raise a TypeError in Rails 5.2. =&gt; 172800</p>
+
+<p>In Rails 5.2 it will raise <code>TypeError</code>, e.g:» 2 * 1.day TypeError: ActiveSupport::Duration can't be coerced into Integer</p>
+
+<p>This is the same behavior as with other types in Ruby, e.g:» 2 * "foo" TypeError: String can't be coerced into Integer » "foo" * 2 =&gt; "foofoo"</p>
+
+<p>As part of this deprecation add <code>*</code> and <code>/</code> methods to <code>AS::Duration</code> so that calculations that keep the duration as the receiver work correctly whether the final receiver is a <code>Date</code> or <code>Time</code>, e.g:» Date.today =&gt; Wed, 01 Mar 2017 » Date.today + 1.day * 2 =&gt; Fri, 03 Mar 2017</p>
+
+<p>Fixes #27457.</p>
+
+<ul>
+  <li>Soft-deprecated the top-level <code>HashWithIndifferentAccess</code> constant.<code>ActiveSupport::HashWithIndifferentAccess</code> should be used instead.Fixes #28157.</li>
+  <li>Deprecate <code>ActiveSupport.halt_callback_chains_on_return_false</code>.</li>
+  <li>Deprecate passing string to <code>:if</code> and <code>:unless</code> conditional options on <code>set_callback</code> and <code>skip_callback</code>.</li>
+</ul>
+
+<h1 id="activejob">ActiveJob</h1>
+
+<p><a href="https://github.com/rails/rails/blob/v5.1.0.rc1/activejob/CHANGELOG.md">https://github.com/rails/rails/blob/v5.1.0.rc1/activejob/CHANGELOG.md</a></p>
+
+<h2 id="removed-deprecations-5">Removed Deprecations</h2>
+
+<ul>
+  <li>Removed deprecated support to passing the adapter class to <code>.queue_adapter</code>.</li>
+  <li>Removed deprecated <code>#original_exception</code> in <code>ActiveJob::DeserializationError</code>.</li>
+</ul>
+
+<h2 id="new-deprecations-4">New Deprecations</h2>
+
+<ul>
+  <li>None</li>
+</ul>
+
+<h1 id="railsties">Railsties</h1>
+
+<p><a href="https://github.com/rails/rails/blob/v5.1.0.rc1/railties/CHANGELOG.md">https://github.com/rails/rails/blob/v5.1.0.rc1/railties/CHANGELOG.md</a></p>
+
+<h2 id="removed-deprecations-6">Removed Deprecations</h2>
+
+<ul>
+  <li>Remove deprecated <code>CONTROLLER</code> environment variable for <code>routes</code> task.</li>
+  <li>Remove deprecated tasks: <code>rails:update</code>, <code>rails:template</code>, <code>rails:template:copy</code>, <code>rails:update:configs</code> and <code>rails:update:bin</code>.</li>
+  <li>Remove deprecated file <code>rails/rack/debugger</code>.</li>
+  <li>Remove deprecated <code>config.serve_static_files</code>.</li>
+  <li>Remove deprecated <code>config.static_cache_control</code>.</li>
+  <li>Removed jquery-rails from default stack, instead rails-ujs that is shipped with Action View is included as default UJS adapter.</li>
+</ul>
+
+<h2 id="new-deprecations-5">New Deprecations</h2>
+
+<ul>
+  <li>None</li>
+</ul>
+
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="mt-32">
+  <div class="sm:px-8">
+    <div class="mx-auto max-w-7xl lg:px-8">
+      <div class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+              <div class="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <a href="/articles.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                <a href="/projects.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+              </div>
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">
+                © 2023 Kimura Innovations, LLC.
+                All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
+
+

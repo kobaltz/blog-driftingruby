@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Docker Builds are slow on M1</title>
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <script src="/javascripts/site.js"></script>
+  </head>
+  <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+    <div class="fixed inset-0 flex justify-center sm:px-8">
+      <div class="flex w-full max-w-7xl lg:px-8">
+        <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+      </div>
+    </div>
+    <div class="relative">
+      <header class="pointer-events-none relative z-50 flex flex-col">
+  <div class="top-0 z-10 h-16 pt-6">
+    <div class="sm:px-8 top-[var(--header-top,theme(spacing.6))] w-full">
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="relative flex gap-4">
+              <div class="flex flex-1">
+                <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
+                  <a aria-label="Home" class="pointer-events-auto" href="/">
+                    <img alt="" sizes="2.25rem"
+                      src="/images/profile.png"
+                      width="512" height="512" decoding="async" data-nimg="1"
+                      class="rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 h-9 w-9"
+                      style="color: transparent;"></a></div>
+              </div>
+              <div class="flex flex-1 justify-end md:justify-center">
+                <nav class="pointer-events-auto md:block">
+                  <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                    <li>
+                      <a href="/" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">About</a>
+                    </li>
+                    <li>
+                      <a href="/articles.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                    </li>
+                    <li>
+                      <a href="/projects.html" class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex justify-end md:flex-1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <main>
+        <div class="sm:px-8 mt-16 lg:mt-32">
+          <div class="mx-auto max-w-7xl lg:px-8">
+            <div class="relative px-4 sm:px-8 lg:px-12">
+              <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="xl:relative">
+                  <div class="mx-auto max-w-2xl">
+                    <a href="/articles.html" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                        <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </a>
+                    <article>
+                      <header class="flex flex-col">
+                        <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                          Docker Builds are slow on M1
+                        </h1>
+                        <time datetime="2022-09-05" class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500">
+                          <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+                          <span class="ml-3">April  9, 2022</span>
+                        </time>
+                      </header>
+                      <div class="mt-8 prose dark:prose-invert">
+                        <p>This is a neat Docker trick for those who have an ARM development machine (Apple M1), but sometimes need to build x86/amd64 images locally to push up to a registry.</p>
+
+<p>Sure, having a CI/CD platform to do this is probably ideal, but for little programs or just sometimes in general, it may be handy to know this.</p>
+
+<p>If you have a spare Intel machine laying around, you can turn it into a build server. Get something like <a href="https://docs.docker.com/engine/install/ubuntu/">Ubuntu installed</a> on there and install the latest Docker. On your development machine, <a href="https://www.ssh.com/academy/ssh/copy-id">copy your publish SSH key over to this build server.</a></p>
+
+<p>So now you you have your server set up and you want to build your Docker image for an x86/amd64 platform. Typically, you would run a command like this below to target the platform.</p>
+
+<pre><code>docker buildx build -f Dockerfile --platform linux/amd64 .
+</code></pre>
+
+<p>And this will work, but what you'll notice is that this is an extremely slow process. The Apple Silicon chips are amazing and are the fastest machines I've ever used. However, when emulating the x86 instructions to build a docker image, it takes such a long time. I've seen this take over an hour on larger and more complex projects.</p>
+
+<p>Just as an example. Here we have a very simple Ruby on Rails application that has little moving parts. I'm using things like <code>esbuild</code> and <code>css-bundling</code>, but nothing fancy. On the M1 chip, it took over 250 seconds to build the image.</p>
+
+<pre><code># Apple Silicon
+[+] Building 316.4s (23/23) FINISHED
+</code></pre>
+
+<p>However, on a AMD 5900X server, I have a Virtual Machine running on there which has Docker installed. Running the exact same project on there took much less time.</p>
+
+<pre><code># AMD 5900X
+[+] Building 62.3s (24/24) FINISHED
+</code></pre>
+
+<p>So, the main concern here is that I do not want to interrupt my normal process on how I build images or handle things. It would be a pain to push up my code, ssh into the build server, pull it down, and then build the image. This is a lot of steps, but luckily there is a MUCH easier way to do this.</p>
+
+<p>Docker's buildx build command has a flag that we can specify a specific builder.</p>
+
+<p>So, we can create this builder on our local machine. The nice part about this creation is that it is idempotent, so you can run this command many times without changing the result. All we have to do is to create a builder profile and in this case I have named it <code>amd64_builder</code>.  Since this builder is a pool of resources, I give a name to for the VM. I'm also specifying the platform that I'm building against and then pass in the SSH url for my builder machine.</p>
+
+<pre><code>docker buildx create \
+  --name amd64_builder \
+  --node linux_amd64_builder \
+  --platform linux/amd64 \
+  ssh://USERNAME@IP_ADDRESS_OF_BUILDER
+</code></pre>
+
+<p>Now, I can build and push the image to the registry. The magical flag that we'll use is <code>--builder</code> as we can now specify the builder VM. The rest of the buildx command is the same as we would expect.</p>
+
+<pre><code>docker buildx build \
+  --builder amd64_builder \
+  --tag USERNAME/REPONAME:TAG \
+  --push .
+</code></pre>
+
+<p>In some cases, I've seen this go almost 10x faster than the amd64 emulation on the M1 chip. If you have a spare Intel/AMD machine laying around, this may be a worthwhile adventure.</p>
+
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="mt-32">
+  <div class="sm:px-8">
+    <div class="mx-auto max-w-7xl lg:px-8">
+      <div class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+              <div class="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <a href="/articles.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Articles</a>
+                <a href="/projects.html" class="transition hover:text-teal-500 dark:hover:text-teal-400">Projects</a>
+              </div>
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">
+                © 2023 Kimura Innovations, LLC.
+                All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
+
+
