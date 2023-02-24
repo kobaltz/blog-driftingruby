@@ -1232,10 +1232,6 @@ pre[class*='language-'] {
   display: flex;
 }
 
-.table {
-  display: table;
-}
-
 .grid {
   display: -ms-grid;
   display: grid;
@@ -1281,10 +1277,6 @@ pre[class*='language-'] {
   height: 2.25rem;
 }
 
-.h-auto {
-  height: auto;
-}
-
 .h-full {
   height: 100%;
 }
@@ -1303,10 +1295,6 @@ pre[class*='language-'] {
 
 .w-12 {
   width: 3rem;
-}
-
-.w-2 {
-  width: 0.5rem;
 }
 
 .w-4 {
@@ -1575,9 +1563,9 @@ pre[class*='language-'] {
   letter-spacing: -0.025em;
 }
 
-.text-teal-500 {
+.text-rose-800 {
   --tw-text-opacity: 1;
-  color: rgb(20 184 166 / var(--tw-text-opacity));
+  color: rgb(159 18 57 / var(--tw-text-opacity));
 }
 
 .text-zinc-400 {
@@ -1593,16 +1581,6 @@ pre[class*='language-'] {
 .text-zinc-800 {
   --tw-text-opacity: 1;
   color: rgb(39 39 42 / var(--tw-text-opacity));
-}
-
-.text-teal-700 {
-  --tw-text-opacity: 1;
-  color: rgb(15 118 110 / var(--tw-text-opacity));
-}
-
-.text-rose-800 {
-  --tw-text-opacity: 1;
-  color: rgb(159 18 57 / var(--tw-text-opacity));
 }
 
 .opacity-0 {
@@ -1701,16 +1679,6 @@ pre[class*='language-'] {
   }
 }
 
-.hover\:text-teal-500:hover {
-  --tw-text-opacity: 1;
-  color: rgb(20 184 166 / var(--tw-text-opacity));
-}
-
-.hover\:text-teal-700:hover {
-  --tw-text-opacity: 1;
-  color: rgb(15 118 110 / var(--tw-text-opacity));
-}
-
 .hover\:text-rose-800:hover {
   --tw-text-opacity: 1;
   color: rgb(159 18 57 / var(--tw-text-opacity));
@@ -1729,16 +1697,6 @@ pre[class*='language-'] {
 
 .group:hover .group-hover\:stroke-zinc-700 {
   stroke: #3f3f46;
-}
-
-.group:hover .group-hover\:text-teal-500 {
-  --tw-text-opacity: 1;
-  color: rgb(20 184 166 / var(--tw-text-opacity));
-}
-
-.group:hover .group-hover\:text-teal-700 {
-  --tw-text-opacity: 1;
-  color: rgb(15 118 110 / var(--tw-text-opacity));
 }
 
 .group:hover .group-hover\:text-rose-800 {
@@ -1840,24 +1798,14 @@ pre[class*='language-'] {
     border-color: rgb(63 63 70 / var(--tw-border-opacity));
   }
 
-  .dark\:hover\:text-teal-400:hover {
-    --tw-text-opacity: 1;
-    color: rgb(45 212 191 / var(--tw-text-opacity));
-  }
-
-  .dark\:hover\:text-teal-500:hover {
-    --tw-text-opacity: 1;
-    color: rgb(20 184 166 / var(--tw-text-opacity));
-  }
-
-  .dark\:hover\:text-teal-700:hover {
-    --tw-text-opacity: 1;
-    color: rgb(15 118 110 / var(--tw-text-opacity));
-  }
-
   .dark\:hover\:text-rose-800:hover {
     --tw-text-opacity: 1;
     color: rgb(159 18 57 / var(--tw-text-opacity));
+  }
+
+  .dark\:hover\:text-teal-400:hover {
+    --tw-text-opacity: 1;
+    color: rgb(45 212 191 / var(--tw-text-opacity));
   }
 
   .dark\:hover\:ring-white\/20:hover {
