@@ -5,10 +5,86 @@
   <id>http://blog.url.com/articles</id>
   <link href="http://blog.url.com/articles"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2023-02-22T19:00:00-05:00</updated>
+  <updated>2023-03-03T19:00:00-05:00</updated>
   <author>
     <name>Blog Author</name>
   </author>
+  <entry>
+    <title>Ruby 3.2.1 with YJIT</title>
+    <link rel="alternate" href="http://blog.url.com/articles/2023/03/04/ruby-with-yjit.html"/>
+    <id>http://blog.url.com/articles/2023/03/04/ruby-with-yjit.html</id>
+    <published>2023-03-03T19:00:00-05:00</published>
+    <updated>2023-03-04T23:34:53-05:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;I've been using Ruby 3.2.1 + YJIT for some time now and overall, I'm seeing anywhere from 10-20%
+performance improvements over running Ruby 3.0.5. Sorry, I don't have an apple-to-apple
+comparison for just YJIT vs non-YJIT. However, the performance improvements are real world
+scenarios on a Ruby on Rails 7.0.4 application.&lt;/p&gt;
+
+&lt;p&gt;So, I've recently formatted my primary desktop which is running macOS 13.2.1 and figured that
+I would document my steps on my preferred way of installing Ruby as well as getting YJIT to work.
+It's important to note that this is also an Apple Silicon machine. These steps should work regardless
+of which Apple Silicon you're using.&lt;/p&gt;
+
+&lt;p&gt;First, I'll install homebrew. This will automatically install the Command Line Tools for Xcode.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You'll then be prompted to run some additional commands.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') &amp;gt;&amp;gt; /Users/$(whoami)/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can then start our install of Ruby. However, there are a few things that we should do first.
+Firstly, we need to select a manager for our Ruby interpreter. I normally use RVM as it's what
+I used for the longest time. It works well and I never had any complaints. However, with Ruby
+3.2.1, we're also going to need an installation of Rust if we want to enable YJIT. So, instead
+of RVM, I'm going to be using ASDF.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install asdf
+echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" &amp;gt;&amp;gt; ${ZDOTDIR:-~}/.zshrc
+source ~/.zshrc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we have a manager for our Ruby and Rust, we can now proceed to install Rust.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;asdf plugin add rust
+asdf install rust latest
+asdf global rust latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that Rust is installed, we can proceed with our Ruby installation. Normally there are some
+dependencies that we need to handle, but luckily, asdf will take care of that for us.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;asdf plugin add ruby
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, there is a strange thing with the mapping of the libraries so if we were to try and
+install Ruby right now, it would fail. So let's take care of this. This is around the libyaml
+package and we need to set some environment variables for this. I've added all four of these
+to my ~/.zshrc so that Ruby can install properly and YJIT is enabled out of the box.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install openssl@3 readline libyaml gmp
+echo 'export LDFLAGS="-L$(brew --prefix libyaml)/lib"' &amp;gt;&amp;gt; ~/.zshrc
+echo 'export CPPFLAGS="-I$(brew --prefix libyaml)/include"' &amp;gt;&amp;gt; ~/.zshrc
+echo 'export RUBY_YJIT_ENABLE=1' &amp;gt;&amp;gt; ~/.zshrc
+echo 'export RUBY_CONFIGURE_OPTS=--enable-yjit' &amp;gt;&amp;gt; ~/.zshrc
+source ~/.zshrc
+asdf install ruby 3.2.1
+asdf global ruby 3.2.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I had to restart my terminal, but once I did, everything seemed to work as expected.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ruby -v
+ruby 3.2.1 (2023-02-08 revision 31819e82c8) +YJIT [arm64-darwin22]
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+  </entry>
   <entry>
     <title>Pushing Code to Multiple Repositories with Git</title>
     <link rel="alternate" href="http://blog.url.com/articles/2023/02/23/pushing-to-multiple-repositories.html"/>
@@ -278,30 +354,6 @@ export default class extends Controller {
 &lt;p&gt;This feature has been around for a few years, but was one that I just happen to stumble upon the other day. It was completely changed the way I debug and approach problems within Javascript.&lt;/p&gt;
 
 &lt;p&gt;I hope that this serves as a reminder or a new trick in your toolset! Thanks for reading!&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Stickers!</title>
-    <link rel="alternate" href="http://blog.url.com/articles/2019/03/06/stickers.html"/>
-    <id>http://blog.url.com/articles/2019/03/06/stickers.html</id>
-    <published>2019-03-05T19:00:00-05:00</published>
-    <updated>2023-02-18T00:56:08-05:00</updated>
-    <author>
-      <name>Article Author</name>
-    </author>
-    <content type="html">&lt;p&gt;Stickers are now live on &lt;a href="https://www.driftingruby.com/"&gt;Drifting Ruby&lt;/a&gt;! You can &lt;a href="https://www.driftingruby.com/profile"&gt;visit your account&lt;/a&gt; or sign up for one to see what stickers are available. Stickers are a way for tracking progress throughout Drifting Ruby.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/articles/2019/03/06/stickers/image-14.png" alt="" /&gt;&lt;/p&gt;
-
-&lt;p&gt;We will be adding various kinds of stickers in the future, but started off with some basic ones. Any suggestions are welcome if you'd like to see one added.&lt;/p&gt;
-
-&lt;h2 id="why-stickers"&gt;Why Stickers?&lt;/h2&gt;
-
-&lt;p&gt;I've always enjoyed playing games and sites that have this kind of functionality. One notable site is Stack Overflow with their Badges. Some time ago, I played World of Warcraft and they had Achievements. Working towards something was always fun and wanted to bring the same kind of fun to Drifting Ruby.&lt;/p&gt;
-
-&lt;h2 id="why-the-name"&gt;Why the name?&lt;/h2&gt;
-
-&lt;p&gt;Many sites have this kind of functionality. They all coin their own naming of these kinds of "badges". However, I wanted something unique and didn't like the term "Achievements". Some other thoughts were Rewards, Trophies, However, some of these terms felt like some may find it as a false sense of accomplishment. So, after some time, we came up with Stickers. After all, who doesn't like stickers.&lt;/p&gt;
 </content>
   </entry>
 </feed>

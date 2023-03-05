@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ruby 3.2.1 with YJIT</title>
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <script src="/javascripts/site.js"></script>
+  </head>
+  <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+    <div class="fixed inset-0 flex justify-center sm:px-8">
+      <div class="flex w-full max-w-7xl lg:px-8">
+        <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+      </div>
+    </div>
+    <div class="relative">
+      <header class="pointer-events-none relative z-50 flex flex-col">
+  <div class="top-0 z-10 h-16 pt-6">
+    <div class="sm:px-8 top-[var(--header-top,theme(spacing.6))] w-full">
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="relative flex gap-4">
+              <div class="flex flex-1">
+                <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
+                  <a aria-label="Home" class="pointer-events-auto" href="/">
+                    <img alt="" sizes="2.25rem"
+                      src="/images/profile.png"
+                      width="512" height="512" decoding="async" data-nimg="1"
+                      class="rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 h-9 w-9"
+                      style="color: transparent;"></a></div>
+              </div>
+              <div class="flex flex-1 justify-end md:justify-center">
+                <nav class="pointer-events-auto md:block">
+                  <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                    <li>
+                      <a href="/" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">About</a>
+                    </li>
+                    <li>
+                      <a href="/articles.html" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">Articles</a>
+                    </li>
+                    <li>
+                      <a href="/projects.html" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">Projects</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex justify-end md:flex-1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <main>
+        <div class="sm:px-8 mt-16 lg:mt-32">
+          <div class="mx-auto max-w-7xl lg:px-8">
+            <div class="relative px-4 sm:px-8 lg:px-12">
+              <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="xl:relative">
+                  <div class="mx-auto max-w-2xl">
+                    <a href="/articles.html" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                        <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </a>
+                    <article>
+                      <header class="flex flex-col">
+                        <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                          Ruby 3.2.1 with YJIT
+                        </h1>
+                        <time datetime="2022-09-05" class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500">
+                          <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+                          <span class="ml-3">March  4, 2023</span>
+                        </time>
+                      </header>
+                      <div class="mt-8 prose dark:prose-invert">
+                        <p>I've been using Ruby 3.2.1 + YJIT for some time now and overall, I'm seeing anywhere from 10-20%
+performance improvements over running Ruby 3.0.5. Sorry, I don't have an apple-to-apple
+comparison for just YJIT vs non-YJIT. However, the performance improvements are real world
+scenarios on a Ruby on Rails 7.0.4 application.</p>
+
+<p>So, I've recently formatted my primary desktop which is running macOS 13.2.1 and figured that
+I would document my steps on my preferred way of installing Ruby as well as getting YJIT to work.
+It's important to note that this is also an Apple Silicon machine. These steps should work regardless
+of which Apple Silicon you're using.</p>
+
+<p>First, I'll install homebrew. This will automatically install the Command Line Tools for Xcode.</p>
+
+<pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+</code></pre>
+
+<p>You'll then be prompted to run some additional commands.</p>
+
+<pre><code>(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') &gt;&gt; /Users/$(whoami)/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+</code></pre>
+
+<p>We can then start our install of Ruby. However, there are a few things that we should do first.
+Firstly, we need to select a manager for our Ruby interpreter. I normally use RVM as it's what
+I used for the longest time. It works well and I never had any complaints. However, with Ruby
+3.2.1, we're also going to need an installation of Rust if we want to enable YJIT. So, instead
+of RVM, I'm going to be using ASDF.</p>
+
+<pre><code>brew install asdf
+echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" &gt;&gt; ${ZDOTDIR:-~}/.zshrc
+source ~/.zshrc
+</code></pre>
+
+<p>Now that we have a manager for our Ruby and Rust, we can now proceed to install Rust.</p>
+
+<pre><code>asdf plugin add rust
+asdf install rust latest
+asdf global rust latest
+</code></pre>
+
+<p>Now that Rust is installed, we can proceed with our Ruby installation. Normally there are some
+dependencies that we need to handle, but luckily, asdf will take care of that for us.</p>
+
+<pre><code>asdf plugin add ruby
+</code></pre>
+
+<p>However, there is a strange thing with the mapping of the libraries so if we were to try and
+install Ruby right now, it would fail. So let's take care of this. This is around the libyaml
+package and we need to set some environment variables for this. I've added all four of these
+to my ~/.zshrc so that Ruby can install properly and YJIT is enabled out of the box.</p>
+
+<pre><code>brew install openssl@3 readline libyaml gmp
+echo 'export LDFLAGS="-L$(brew --prefix libyaml)/lib"' &gt;&gt; ~/.zshrc
+echo 'export CPPFLAGS="-I$(brew --prefix libyaml)/include"' &gt;&gt; ~/.zshrc
+echo 'export RUBY_YJIT_ENABLE=1' &gt;&gt; ~/.zshrc
+echo 'export RUBY_CONFIGURE_OPTS=--enable-yjit' &gt;&gt; ~/.zshrc
+source ~/.zshrc
+asdf install ruby 3.2.1
+asdf global ruby 3.2.1
+</code></pre>
+
+<p>I had to restart my terminal, but once I did, everything seemed to work as expected.</p>
+
+<pre><code>ruby -v
+ruby 3.2.1 (2023-02-08 revision 31819e82c8) +YJIT [arm64-darwin22]
+</code></pre>
+
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="mt-32">
+  <div class="sm:px-8">
+    <div class="mx-auto max-w-7xl lg:px-8">
+      <div class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+              <div class="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <a href="/articles.html" class="transition hover:text-rose-800 dark:hover:text-teal-400">Articles</a>
+                <a href="/projects.html" class="transition hover:text-rose-800 dark:hover:text-teal-400">Projects</a>
+              </div>
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">
+                © 2023 Kimura Innovations, LLC.
+                All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
+
+
