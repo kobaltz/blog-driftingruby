@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Blog Name</title>
-  <subtitle>Blog subtitle</subtitle>
-  <id>http://blog.url.com/articles</id>
-  <link href="http://blog.url.com/articles"/>
-  <link href="http://blog.url.com/feed.xml" rel="self"/>
+  <title>Drifting Ruby</title>
+  <subtitle>Collection of ideas about programming, screencasts, Ruby on Rails, and more.</subtitle>
+  <id>http://blog.driftingruby.com/articles</id>
+  <link href="http://blog.driftingruby.com/articles"/>
+  <link href="http://blog.driftingruby.com/feed.xml" rel="self"/>
   <updated>2023-03-03T19:00:00-05:00</updated>
   <author>
     <name>Blog Author</name>
   </author>
   <entry>
     <title>Ruby 3.2.1 with YJIT</title>
-    <link rel="alternate" href="http://blog.url.com/articles/2023/03/04/ruby-with-yjit.html"/>
-    <id>http://blog.url.com/articles/2023/03/04/ruby-with-yjit.html</id>
+    <link rel="alternate" href="http://blog.driftingruby.com/articles/2023/03/04/ruby-with-yjit.html"/>
+    <id>http://blog.driftingruby.com/articles/2023/03/04/ruby-with-yjit.html</id>
     <published>2023-03-03T19:00:00-05:00</published>
     <updated>2023-03-04T23:34:53-05:00</updated>
     <author>
@@ -87,8 +87,8 @@ ruby 3.2.1 (2023-02-08 revision 31819e82c8) +YJIT [arm64-darwin22]
   </entry>
   <entry>
     <title>Pushing Code to Multiple Repositories with Git</title>
-    <link rel="alternate" href="http://blog.url.com/articles/2023/02/23/pushing-to-multiple-repositories.html"/>
-    <id>http://blog.url.com/articles/2023/02/23/pushing-to-multiple-repositories.html</id>
+    <link rel="alternate" href="http://blog.driftingruby.com/articles/2023/02/23/pushing-to-multiple-repositories.html"/>
+    <id>http://blog.driftingruby.com/articles/2023/02/23/pushing-to-multiple-repositories.html</id>
     <published>2023-02-22T19:00:00-05:00</published>
     <updated>2023-02-23T11:30:44-05:00</updated>
     <author>
@@ -130,8 +130,8 @@ GitHub and another pointing to GitLab.&lt;/p&gt;
   </entry>
   <entry>
     <title>Docker Builds are slow on M1</title>
-    <link rel="alternate" href="http://blog.url.com/articles/2022/04/09/docker-builds-are-slow-on-m1.html"/>
-    <id>http://blog.url.com/articles/2022/04/09/docker-builds-are-slow-on-m1.html</id>
+    <link rel="alternate" href="http://blog.driftingruby.com/articles/2022/04/09/docker-builds-are-slow-on-m1.html"/>
+    <id>http://blog.driftingruby.com/articles/2022/04/09/docker-builds-are-slow-on-m1.html</id>
     <published>2022-04-08T20:00:00-04:00</published>
     <updated>2023-02-18T01:05:28-05:00</updated>
     <author>
@@ -188,8 +188,8 @@ GitHub and another pointing to GitLab.&lt;/p&gt;
   </entry>
   <entry>
     <title>Transferring Files</title>
-    <link rel="alternate" href="http://blog.url.com/articles/2022/04/08/transferring-files.html"/>
-    <id>http://blog.url.com/articles/2022/04/08/transferring-files.html</id>
+    <link rel="alternate" href="http://blog.driftingruby.com/articles/2022/04/08/transferring-files.html"/>
+    <id>http://blog.driftingruby.com/articles/2022/04/08/transferring-files.html</id>
     <published>2022-04-07T20:00:00-04:00</published>
     <updated>2023-02-18T01:04:07-05:00</updated>
     <author>
@@ -236,8 +236,8 @@ Receiving (-&amp;gt;tcp:some-external-ip:65250)..
   </entry>
   <entry>
     <title>Let's Encrypt Wildcard Cert</title>
-    <link rel="alternate" href="http://blog.url.com/articles/2021/02/10/lets-encrypt-wildcard-cert.html"/>
-    <id>http://blog.url.com/articles/2021/02/10/lets-encrypt-wildcard-cert.html</id>
+    <link rel="alternate" href="http://blog.driftingruby.com/articles/2021/02/10/lets-encrypt-wildcard-cert.html"/>
+    <id>http://blog.driftingruby.com/articles/2021/02/10/lets-encrypt-wildcard-cert.html</id>
     <published>2021-02-09T19:00:00-05:00</published>
     <updated>2023-02-18T01:02:12-05:00</updated>
     <author>
@@ -309,8 +309,8 @@ server {
   </entry>
   <entry>
     <title>Best Developer Tools Trick</title>
-    <link rel="alternate" href="http://blog.url.com/articles/2020/02/21/best-developer-tools-trick.html"/>
-    <id>http://blog.url.com/articles/2020/02/21/best-developer-tools-trick.html</id>
+    <link rel="alternate" href="http://blog.driftingruby.com/articles/2020/02/21/best-developer-tools-trick.html"/>
+    <id>http://blog.driftingruby.com/articles/2020/02/21/best-developer-tools-trick.html</id>
     <published>2020-02-20T19:00:00-05:00</published>
     <updated>2023-02-18T00:58:38-05:00</updated>
     <author>
