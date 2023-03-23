@@ -7,7 +7,7 @@
   <link href="https://blog.driftingruby.com/feed.xml" rel="self"/>
   <updated>2023-03-03T19:00:00-05:00</updated>
   <author>
-    <name>Blog Author</name>
+    <name>Dave Kimura</name>
   </author>
   <entry>
     <title>Ruby 3.2.1 with YJIT</title>
@@ -16,7 +16,7 @@
     <published>2023-03-03T19:00:00-05:00</published>
     <updated>2023-03-04T23:34:53-05:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Dave Kimura</name>
     </author>
     <content type="html">&lt;p&gt;I've been using Ruby 3.2.1 + YJIT for some time now and overall, I'm seeing anywhere from 10-20%
 performance improvements over running Ruby 3.0.5. Sorry, I don't have an apple-to-apple
@@ -92,7 +92,7 @@ ruby 3.2.1 (2023-02-08 revision 31819e82c8) +YJIT [arm64-darwin22]
     <published>2023-02-22T19:00:00-05:00</published>
     <updated>2023-02-23T11:30:44-05:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Dave Kimura</name>
     </author>
     <content type="html">&lt;p&gt;Have you ever found yourself needing to publish your code to multiple repositories? Perhaps you have a static site hosted on Github Pages and want to have multiple domains point to it. Or maybe you manage multiple technology-related blogs and need to consolidate your content into a single blog, while still updating it on multiple domain names. In this article, we will explore a solution to push code to multiple repositories with minimal effort using Git.&lt;/p&gt;
 
@@ -135,7 +135,7 @@ GitHub and another pointing to GitLab.&lt;/p&gt;
     <published>2022-04-08T20:00:00-04:00</published>
     <updated>2023-02-18T01:05:28-05:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Dave Kimura</name>
     </author>
     <content type="html">&lt;p&gt;This is a neat Docker trick for those who have an ARM development machine (Apple M1), but sometimes need to build x86/amd64 images locally to push up to a registry.&lt;/p&gt;
 
@@ -193,7 +193,7 @@ GitHub and another pointing to GitLab.&lt;/p&gt;
     <published>2022-04-07T20:00:00-04:00</published>
     <updated>2023-02-18T01:04:07-05:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Dave Kimura</name>
     </author>
     <content type="html">&lt;p&gt;Sometimes we get into situations where we need to remotely transfer a file. This file could be large or it could be tiny. This file may be sensitive or could be of little importance. Regardless, sending this file over to a remote location could still have its challenges. What if the file is coming from a headless server? Perhaps you have some logs that you want to inspect on your local machine instead of parsing through them remotely in an ssh session. This is where &lt;a href="https://magic-wormhole.readthedocs.io"&gt;magic-wormhole&lt;/a&gt; comes into play.&lt;/p&gt;
 
@@ -241,7 +241,7 @@ Receiving (-&amp;gt;tcp:some-external-ip:65250)..
     <published>2021-02-09T19:00:00-05:00</published>
     <updated>2023-02-18T01:02:12-05:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Dave Kimura</name>
     </author>
     <content type="html">&lt;p&gt;I'm writing this more as documentation for myself as I have several domains which I often use as playgrounds for certain things. This could be a kubernetes environment or a docker cluster where I have several applications deployed, but don't want to set up an nginx site for each one of the apps that I deploy.&lt;/p&gt;
 
@@ -314,7 +314,7 @@ server {
     <published>2020-02-20T19:00:00-05:00</published>
     <updated>2023-02-18T00:58:38-05:00</updated>
     <author>
-      <name>Article Author</name>
+      <name>Dave Kimura</name>
     </author>
     <content type="html">&lt;p&gt;So to start, I am a Ruby person. I love Ruby and also Ruby on Rails. They are my language and framework of choice. However, like all things, over time the framework will evolve as well as the community.&lt;/p&gt;
 
