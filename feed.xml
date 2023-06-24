@@ -5,10 +5,113 @@
   <id>https://blog.driftingruby.com/articles</id>
   <link href="https://blog.driftingruby.com/articles"/>
   <link href="https://blog.driftingruby.com/feed.xml" rel="self"/>
-  <updated>2023-03-03T19:00:00-05:00</updated>
+  <updated>2023-05-05T20:00:00-04:00</updated>
   <author>
     <name>Dave Kimura</name>
   </author>
+  <entry>
+    <title>Running Meilisearch</title>
+    <link rel="alternate" href="https://blog.driftingruby.com/articles/2023/05/06/running-meilisearch.html"/>
+    <id>https://blog.driftingruby.com/articles/2023/05/06/running-meilisearch.html</id>
+    <published>2023-05-05T20:00:00-04:00</published>
+    <updated>2023-05-05T23:57:45-04:00</updated>
+    <author>
+      <name>Dave Kimura</name>
+    </author>
+    <content type="html">&lt;p&gt;MeiliSearch is a powerful, fast, and easy-to-use search engine, perfect for developers who want to implement search functionality into their applications. In this blog post, we will walk you through the process of deploying MeiliSearch with SSL encryption using Docker Compose and Nginx as a reverse proxy. This setup ensures a secure connection between your users and your MeiliSearch instance.&lt;/p&gt;
+
+&lt;h2 id="prerequisites"&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;Before you begin, make sure you have the following tools installed on your system:&lt;/p&gt;
+
+&lt;p&gt;Docker: Ensure Docker is installed and running on your machine. You can follow the installation guide on the official Docker website.&lt;/p&gt;
+
+&lt;p&gt;Docker Compose: Make sure Docker Compose is installed. You can find installation instructions on the official Docker Compose website.&lt;/p&gt;
+
+&lt;p&gt;OpenSSL: Required for generating SSL certificates. You can install OpenSSL through your package manager or download it from the official OpenSSL website.&lt;/p&gt;
+
+&lt;h2 id="configuration"&gt;Configuration&lt;/h2&gt;
+
+&lt;p&gt;Create a docker-compose.yml file in your project directory and copy the following content:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;version: '3.8'
+
+services:
+  meilisearch:
+    image: getmeili/meilisearch:v1.1
+    restart: always
+    ports:
+      - '7700:7700'
+    environment:
+      - MEILI_MASTER_KEY=key
+    volumes:
+      - meili_data:/meili_data
+
+  nginx:
+    image: nginx:stable-alpine
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /home/ubuntu/cert.pem:/etc/nginx/certs/fullchain.pem
+      - /home/ubuntu/key.pem:/etc/nginx/certs/privkey.pem
+    depends_on:
+      - meilisearch
+
+volumes:
+  meili_data:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This configuration file sets up two services: MeiliSearch and Nginx.&lt;/p&gt;
+
+&lt;p&gt;MeiliSearch service:&lt;/p&gt;
+
+&lt;p&gt;Uses the MeiliSearch image (v1.1).
+Automatically restarts if it stops.
+Maps the container port 7700 to the host port 7700.
+Sets the environment variable MEILI_MASTER_KEY to "key".
+Persists the MeiliSearch data to a named volume meili_data.&lt;/p&gt;
+
+&lt;p&gt;Nginx service:&lt;/p&gt;
+
+&lt;p&gt;Uses the Nginx stable-alpine image.
+Automatically restarts if it stops.
+Maps container ports 80 and 443 to host ports 80 and 443, respectively.
+Mounts the Nginx configuration file and SSL certificate files.
+Specifies a dependency on the MeiliSearch service.
+Now, create an nginx.conf file in your project directory and paste the following content:&lt;/p&gt;
+
+&lt;h1 id="openssl-rand--hex-16"&gt;openssl rand -hex 16&lt;/h1&gt;
+&lt;p&gt;# openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -subj "/CN=yourdomainname" -nodes
+# events {
+#     worker_connections 1024;
+# }
+# http {
+#     server {
+#         listen 80;
+#         server_name yourdomainname;
+#         return 301 https://$host$request_uri;
+#     }
+#     server {
+#         listen 443 ssl;
+#         server_name yourdomainname;
+#         ssl_certificate /etc/nginx/certs/fullchain.pem;
+#         ssl_certificate_key /etc/nginx/certs/privkey.pem;
+#         ssl_protocols TLSv1.2 TLSv1.3;
+#         ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
+#         location / {
+#             proxy_pass http://meilisearch:7700;
+#             proxy_set_header Host $host;
+#             proxy_set_header X-Real-IP $remote_addr;
+#             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#             proxy_set_header X-Forwarded-Proto $scheme;
+#         }
+#     }
+# }&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Ruby 3.2.1 with YJIT</title>
     <link rel="alternate" href="https://blog.driftingruby.com/articles/2023/03/04/ruby-with-yjit.html"/>
@@ -305,55 +408,6 @@ server {
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;In another blog article, I'll describe how I set up the Docker host to take in these requests from the nginx server.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Best Developer Tools Trick</title>
-    <link rel="alternate" href="https://blog.driftingruby.com/articles/2020/02/21/best-developer-tools-trick.html"/>
-    <id>https://blog.driftingruby.com/articles/2020/02/21/best-developer-tools-trick.html</id>
-    <published>2020-02-20T19:00:00-05:00</published>
-    <updated>2023-02-18T00:58:38-05:00</updated>
-    <author>
-      <name>Dave Kimura</name>
-    </author>
-    <content type="html">&lt;p&gt;So to start, I am a Ruby person. I love Ruby and also Ruby on Rails. They are my language and framework of choice. However, like all things, over time the framework will evolve as well as the community.&lt;/p&gt;
-
-&lt;p&gt;With the evolution of Ruby on Rails over time, we have seen more and more Javascript added into the mix. We have seen Javascript Front End Frameworks introduced and it paved an entirely different route for us. A route that I don't necessarily agree with, but regardless, we're using more Javascript today than we have ever before.&lt;/p&gt;
-
-&lt;p&gt;It wasn't until the addition of StimulusJS did I really start to dive deeper into Javascript. I believe that good practices and sticking as close to the Ruby on Rails core as possible will promote healthy and maintainable applications with as few resources as possible.&lt;/p&gt;
-
-&lt;p&gt;Regardless of the path that we choose, Javascript is here to stay (for now), so it is important to know about the tools that we have available to us. Much like &lt;code&gt;puts&lt;/code&gt; debugging within Ruby, we have &lt;code&gt;console.log()&lt;/code&gt; in Javascript. This will get us pretty far with debugging or building out something within Javascript. However, we get into situations where we are out of our window scope in Javascript and things get a bit more difficult.&lt;/p&gt;
-
-&lt;p&gt;Here in lies our best Developer Tool Trick, and I've tested this with both Chrome and Firefox. So let's take a very simple Stimulus Controller where we have one target, and when it connects, we will log the target into our console so we can ensure it is registering properly.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;import { Controller } from "stimulus"
-export default class extends Controller {
-  static targets = ["input"]
-  initialize() {  }
-  connect() {
-    console.log(this.inputTarget)
-  }
-  disconnect() { }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So, when we open the Developer Tools, we will see the console with the logged input.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/articles/2020/02/21/best-developer-tools-trick/image-15.png" alt="" /&gt;&lt;/p&gt;
-
-&lt;p&gt;So everything looks like it is working well. On a very simple case like this, we may continue on coding. However, other times, on more complicated issues, we may want to interact with this object. However, this is where things get to be a bit more difficult. Do we try to grab the element on the page and then follow through our code and recreate what we're trying to do in the Stimulus Controller? On a simple example, this will work. However, if you're trying to use another Javascript library like Tribute, Choices-JS, FullCalendar, etc. it can be very difficult since we don't have access to these libraries in our global scope. Instead, we're importing these into our application within the Stimulus Controller.&lt;/p&gt;
-
-&lt;p&gt;So if you find yourself in one of these situations, continue to log to the console the object that you would like to interact with. Then RIGHT CLICK on the object in the console and select &lt;code&gt;Store as global variable&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/articles/2020/02/21/best-developer-tools-trick/image-16.png" alt="" /&gt;&lt;/p&gt;
-
-&lt;p&gt;This will create a temporary variable of that object which will now allow you to interact with.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/articles/2020/02/21/best-developer-tools-trick/image-17.png" alt="" /&gt;&lt;/p&gt;
-
-&lt;p&gt;This feature has been around for a few years, but was one that I just happen to stumble upon the other day. It was completely changed the way I debug and approach problems within Javascript.&lt;/p&gt;
-
-&lt;p&gt;I hope that this serves as a reminder or a new trick in your toolset! Thanks for reading!&lt;/p&gt;
 </content>
   </entry>
 </feed>
