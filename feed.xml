@@ -14,7 +14,7 @@
     <link rel="alternate" href="https://blog.driftingruby.com/articles/2023/05/06/running-meilisearch.html"/>
     <id>https://blog.driftingruby.com/articles/2023/05/06/running-meilisearch.html</id>
     <published>2023-05-05T20:00:00-04:00</published>
-    <updated>2023-05-05T23:57:45-04:00</updated>
+    <updated>2023-09-30T12:35:08-04:00</updated>
     <author>
       <name>Dave Kimura</name>
     </author>
@@ -66,50 +66,76 @@ volumes:
 
 &lt;p&gt;This configuration file sets up two services: MeiliSearch and Nginx.&lt;/p&gt;
 
-&lt;p&gt;MeiliSearch service:&lt;/p&gt;
+&lt;h2 id="meilisearch-service"&gt;Meilisearch service:&lt;/h2&gt;
 
-&lt;p&gt;Uses the MeiliSearch image (v1.1).
-Automatically restarts if it stops.
-Maps the container port 7700 to the host port 7700.
-Sets the environment variable MEILI_MASTER_KEY to "key".
-Persists the MeiliSearch data to a named volume meili_data.&lt;/p&gt;
+&lt;p&gt;You should replace the key value with a random string. This key will be used to secure your MeiliSearch instance. You can generate a random string using the following command:&lt;/p&gt;
 
-&lt;p&gt;Nginx service:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;openssl rand -hex 16
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Uses the Nginx stable-alpine image.
-Automatically restarts if it stops.
-Maps container ports 80 and 443 to host ports 80 and 443, respectively.
-Mounts the Nginx configuration file and SSL certificate files.
-Specifies a dependency on the MeiliSearch service.
-Now, create an nginx.conf file in your project directory and paste the following content:&lt;/p&gt;
+&lt;h2 id="nginx-service"&gt;Nginx service:&lt;/h2&gt;
 
-&lt;h1 id="openssl-rand--hex-16"&gt;openssl rand -hex 16&lt;/h1&gt;
-&lt;p&gt;# openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -subj "/CN=yourdomainname" -nodes
-# events {
-#     worker_connections 1024;
-# }
-# http {
-#     server {
-#         listen 80;
-#         server_name yourdomainname;
-#         return 301 https://$host$request_uri;
-#     }
-#     server {
-#         listen 443 ssl;
-#         server_name yourdomainname;
-#         ssl_certificate /etc/nginx/certs/fullchain.pem;
-#         ssl_certificate_key /etc/nginx/certs/privkey.pem;
-#         ssl_protocols TLSv1.2 TLSv1.3;
-#         ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
-#         location / {
-#             proxy_pass http://meilisearch:7700;
-#             proxy_set_header Host $host;
-#             proxy_set_header X-Real-IP $remote_addr;
-#             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-#             proxy_set_header X-Forwarded-Proto $scheme;
-#         }
-#     }
-# }&lt;/p&gt;
+&lt;p&gt;There's a bit more config to do with the Nginx service. We can create a ssl certificate using OpenSSL. We will use this certificate to enable SSL encryption for our MeiliSearch instance. You can generate a self-signed certificate using the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -subj "/CN=yourdomainname" -nodes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we can create a configuration file called nginx.conf and copy the following content:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;events {
+    worker_connections 1024;
+}
+http {
+    server {
+        listen 80;
+        server_name yourdomainname;
+        return 301 https://$host$request_uri;
+    }
+    server {
+        listen 443 ssl;
+        server_name yourdomainname;
+        ssl_certificate /etc/nginx/certs/fullchain.pem;
+        ssl_certificate_key /etc/nginx/certs/privkey.pem;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
+        location / {
+            proxy_pass http://meilisearch:7700;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You'll want to update the appropriate values for your domain name and SSL certificate paths.&lt;/p&gt;
+
+&lt;h2 id="running-the-application"&gt;Running the application&lt;/h2&gt;
+
+&lt;p&gt;Now that we have our configuration files ready, we can run the application using the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker compose up -d
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will start both services in the background. You can check the status of your services using the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker compose ps
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You should see something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Name                Command               State           Ports
+--------------------------------------------------------------------------------
+meilisearch         ...                   Up              ..
+nginx               ...                   Up              ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;-d&lt;/code&gt; in the &lt;code&gt;docker compose up -d&lt;/code&gt; command tells Docker to run the services in the background.&lt;/p&gt;
+
+&lt;p&gt;This will also cause the services to restart automatically if they crash or if you reboot the machine.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
 </content>
   </entry>
   <entry>
