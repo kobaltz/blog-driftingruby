@@ -193,6 +193,20 @@
 
 <p>We could change this around a bit if we needed other stuff like icons in the breadcrumbs. If I did have to do this approach, an additional element to the breadcrumb item array could be added. However, at this point the array starts to get too complicated and hard to read. Instead, I would create a hash and then reference the items via their key. This could even be extracted to a helper method in <code>app/helpers</code>, but I was happy enough with this implementation for now since it did the job and works well. My main concern was having a fairly unobtrusive way to customize the breadcrumb items within the view.</p>
 
+
+                        <div id="disqus_thread"></div>
+                        <script>
+                            var disqus_config = function () {
+                              this.page.identifier = "hacking-content-for-to-create-a-simple-display-helper";
+                            };
+                            (function() {
+                              var d = document, s = d.createElement('script');
+                              s.src = 'https://driftingruby.disqus.com/embed.js';
+                              s.setAttribute('data-timestamp', +new Date());
+                              (d.head || d.body).appendChild(s);
+                            })();
+                        </script>
+                        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
                       </div>
                     </article>
                   </div>
