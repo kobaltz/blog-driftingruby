@@ -14,7 +14,7 @@
     <link rel="alternate" href="https://blog.driftingruby.com/articles/2023/10/01/using-sqlite-in-production.html"/>
     <id>https://blog.driftingruby.com/articles/2023/10/01/using-sqlite-in-production.html</id>
     <published>2023-09-30T22:46:00-04:00</published>
-    <updated>2023-10-01T00:56:23-04:00</updated>
+    <updated>2023-10-01T01:06:55-04:00</updated>
     <author>
       <name>Dave Kimura</name>
     </author>
@@ -44,7 +44,7 @@ easy to transfer, copy, or backup.
 you could run out of disk space. Make sure that you have proper monitoring in place on the server. Also,
 while I've never confirmed that this could be an issue, but this is also putting all of your eggs in
 one basket. If there was ever an issue with the file being corrupted then it could be a total loss.
-Again, I've never seen this happen, but I also don't use SQLite enough to have experiened this.&lt;/span&gt;&lt;/p&gt;
+Again, I've never seen this happen, but I also don't use SQLite enough to have experienced this.&lt;/span&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Low Resource Footprint:&lt;/strong&gt; It’s lightweight and requires minimal memory, making it suitable for
 devices with limited resources like IoT devices or mobile applications.
@@ -55,7 +55,7 @@ engine, typically it isn't seen in a production setting.&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Consistent Performance:&lt;/strong&gt; For applications with a moderate load and where the read operations far
 outnumber the write operations, SQLite can deliver consistent and fast performance.
 &lt;span style="color:red"&gt;There's no network hops to worry about. Optimized SQL queries are often
-not the slow point of the applicaton. Even with network latency it's often a tiny amount such that
+not the slow point of the application. Even with network latency it's often a tiny amount such that
 you won't notice. If we're talking about a huge application that's service millions of requests
 per second then these network hops could add up with a traditional database.&lt;/span&gt;&lt;/p&gt;
 
@@ -95,7 +95,7 @@ some libraries on the server, they're well documented steps and usually not a bi
 operations. It locks the entire database during a write operation, which can cause a bottleneck.
 &lt;span style="color:red"&gt;If we're working on a single threaded application since we're talking about
 smaller applications without too much traffic, this will not really be an issue. However, it does
-bring up a good point for any kind of background workers that occur asynchronously. Even though
+bring up a good point for any kind of background workers that occur asynchronous. Even though
 SQLite does a good job at handling transactions, it is easy to get ourselves into situations of
 Deadlocks when background jobs are trying to write to the database at the same time.&lt;/span&gt;&lt;/p&gt;
 
