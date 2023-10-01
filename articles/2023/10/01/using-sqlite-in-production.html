@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Using SQLite in Production</title>
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <script src="/javascripts/site.js"></script>
+  </head>
+  <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+    <div class="fixed inset-0 flex justify-center sm:px-8">
+      <div class="flex w-full max-w-7xl lg:px-8">
+        <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+      </div>
+    </div>
+    <div class="relative">
+      <header class="pointer-events-none relative z-50 flex flex-col">
+  <div class="top-0 z-10 h-16 pt-6">
+    <div class="sm:px-8 top-[var(--header-top,theme(spacing.6))] w-full">
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="relative flex gap-4">
+              <div class="flex flex-1">
+                <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
+                  <a aria-label="Home" class="pointer-events-auto" href="/">
+                    <img alt="" sizes="2.25rem"
+                      src="/images/profile.png"
+                      width="512" height="512" decoding="async" data-nimg="1"
+                      class="rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 h-9 w-9"
+                      style="color: transparent;"></a></div>
+              </div>
+              <div class="flex flex-1 justify-end md:justify-center">
+                <nav class="pointer-events-auto md:block">
+                  <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                    <li>
+                      <a href="/" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">About</a>
+                    </li>
+                    <li>
+                      <a href="/articles.html" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">Articles</a>
+                    </li>
+                    <li>
+                      <a href="/projects.html" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">Projects</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex justify-end md:flex-1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <main>
+        <div class="sm:px-8 mt-16 lg:mt-32">
+          <div class="mx-auto max-w-7xl lg:px-8">
+            <div class="relative px-4 sm:px-8 lg:px-12">
+              <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="xl:relative">
+                  <div class="mx-auto max-w-2xl">
+                    <a href="/articles.html" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                        <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </a>
+                    <article>
+                      <header class="flex flex-col">
+                        <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                          Using SQLite in Production
+                        </h1>
+                        <time datetime="2022-09-05" class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500">
+                          <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+                          <span class="ml-3">October  1, 2023</span>
+                        </time>
+                      </header>
+                      <div class="mt-8 prose dark:prose-invert">
+                        
+<p>So there is a recent push on using SQLite in production, but there's also little talks around
+the pros and cons of doing so. This article will try to cover the pros and cons of using SQLite
+in production.</p>
+
+<p>To start, there's some value in asking ChatGTP what they think about using SQLite in production.
+So, the below information is from ChatGPT and it has some interesting points. However, some of these
+points are flawed and I don't agree with them. So, this is another example where you must take
+everything with a grain of salt when it comes to generative AI content.</p>
+
+<p>My responses will be in red next to the points made by ChatGPT.</p>
+
+<h2 id="pros-of-using-sqlite-in-production">Pros of Using SQLite in Production:</h2>
+
+<p><strong>Simplicity and Maintenance:</strong> SQLite requires no separate server process or system to operate.
+Its serverless nature makes it easy to set up, backup, and maintain.
+<span style="color:red">Keep in mind that this is requiring you to install the sqlite service
+on the server that will be using the database. This isn't a big deal as the <code>sqlite3</code> binary
+is about 4MB. Though, it doesn't run as a service so it is simple to manage.</span></p>
+
+<p><strong>Portability:</strong> All the data in an SQLite database is stored in a single file, making it extremely
+easy to transfer, copy, or backup.
+<span style="color:red">This is true. However, you may want to be careful in situations where
+you could run out of disk space. Make sure that you have proper monitoring in place on the server. Also,
+while I've never confirmed that this could be an issue, but this is also putting all of your eggs in
+one basket. If there was ever an issue with the file being corrupted then it could be a total loss.
+Again, I've never seen this happen, but I also don't use SQLite enough to have experiened this.</span></p>
+
+<p><strong>Low Resource Footprint:</strong> It’s lightweight and requires minimal memory, making it suitable for
+devices with limited resources like IoT devices or mobile applications.
+<span style="color:red">The IoT devices and mobile applications is where I have seen this the
+most. While a default Ruby on Rails application does come with SQLite as the default database
+engine, typically it isn't seen in a production setting.</span></p>
+
+<p><strong>Consistent Performance:</strong> For applications with a moderate load and where the read operations far
+outnumber the write operations, SQLite can deliver consistent and fast performance.
+<span style="color:red">There's no network hops to worry about. Optimized SQL queries are often
+not the slow point of the applicaton. Even with network latency it's often a tiny amount such that
+you won't notice. If we're talking about a huge application that's service millions of requests
+per second then these network hops could add up with a traditional database.</span></p>
+
+<p><strong>ACID Compliant:</strong> SQLite transactions are ACID compliant, ensuring data integrity even after
+system crashes or power failures.
+<span style="color:red">Atomic, consistent, isolated, and durable (ACID). It's true that SQLite
+has come a long way in terms of integrity and reliability of handling the data. However, with
+system crashes or power failures, database corruptions can occur especially on systems where RAID
+systems are configured improperly. If the RAID cache is set to write-back, you get better performance
+but could end up in a situation where there is data loss or corruption.</span></p>
+
+<p><strong>Cross-Platform:</strong> SQLite is cross-platform and can be used on all major operating systems,
+including Windows, Linux, and macOS.
+<span style="color:red">In terms of deploying a Ruby on Rails application, this is kind of a moot
+point as we will typically not change the platform the application is hosted on.</span></p>
+
+<p><strong>Free and Open-Source:</strong> SQLite is free to use and is released under the Public Domain license,
+which means it can be used for any purpose, including commercial applications.
+<span style="color:red">The same could be said for MySQL (or MariaDB) and PostgreSQL. MySQL is GPL licensed
+which probably doesn't make a difference if you're hosting your own application and not distributing it.</span></p>
+
+<p><strong>No Configuration:</strong> SQLite doesn’t require any configuration or setup, making it easy to
+use for beginners.
+<span style="color:red">Yes, properly configuring a MySQL or PostgreSQL instance can be difficult
+and should be done properly for optimal performance. However, using a managed service with AWS,
+GCP, Digital Ocean, Azure, etc. will often have a decent configuration that you don't need to
+worry about.</span></p>
+
+<p><strong>No Dependencies:</strong> SQLite doesn’t have any dependencies, which means it can be used in any
+programming language or framework.
+<span style="color:red">While MySQL and PostgreSQL have dependencies and you'll need to install
+some libraries on the server, they're well documented steps and usually not a big deal.</span></p>
+
+<h2 id="cons-of-using-sqlite-in-production">Cons of Using SQLite in Production:</h2>
+
+<p><strong>Concurrency Issues:</strong> SQLite is not ideal for applications with a high level of concurrent write
+operations. It locks the entire database during a write operation, which can cause a bottleneck.
+<span style="color:red">If we're working on a single threaded application since we're talking about
+smaller applications without too much traffic, this will not really be an issue. However, it does
+bring up a good point for any kind of background workers that occur asynchronously. Even though
+SQLite does a good job at handling transactions, it is easy to get ourselves into situations of
+Deadlocks when background jobs are trying to write to the database at the same time.</span></p>
+
+<p><strong>Not Suited for Large Databases:</strong> While SQLite supports database files up to 140 TB, it’s generally
+not the best choice for very large datasets due to potential performance issues.
+<span style="color:red">Most databases will never reach 140TB. But this does not talk to file system limits.
+This is really a moot point since modern file systems exceed SQLite's limits, but if you're file system
+was improperly set (to something like Fat32), then you could easily reach the 4GB limit. Most likely,
+if your database was even getting to a fraction of this size, you'll have other issues to be concerned with;
+system resources, performance issues, etc.</span></p>
+
+<p><strong>Limited Built-in Features:</strong> Unlike more robust RDBMS like PostgreSQL or MySQL, SQLite doesn’t
+have a wide range of built-in tools or support for stored procedures, right out of the box.
+<span style="color:red">It supports the important ones like JSON data types. Typically, we don't use
+stored procedures in Ruby on Rails applications since the ActiveRecord ORM is powerful enough in most cases.</span></p>
+
+<p><strong>Limited Security:</strong> SQLite doesn’t have built-in support for user management or access control,
+making it less secure than other RDBMS.
+<span style="color:red">While this can be a critical aspect in some scenarios, the Ruby on Rails applications
+will likely not need this level of access control. However, it does speak to the vulnerability of the database
+as it will be much easier to make a copy of if the system is ever breached. In a traditional deployment, there's
+still nothing that could really stop the attacker if they gained access to the machine, but it does offer
+some levels of obfuscation if they don't know about how Rails handles credentials. But, the reality is that
+if a bad actor has gained access to your machine, all bets are already off and you're in a very bad situation.</span></p>
+
+<p><strong>No Client-Server Model:</strong> SQLite doesn’t have a client-server model, which means it can’t be
+accessed by multiple users at the same time.
+<span style="color:red">This is going to be a big issue if High Availability is a concern. Typically, we will
+have a load balancer as the SSL termination point and it will route the traffic to one of the available web
+servers. This is a deal breaker in many situations as using SQLite in a production setting could mean that
+you have downtime during deployments. You lose the ability for rolling deployments and have basically put
+all eggs in one basket. Depending on your deployment strategy, it could also mean that you're having to maintain
+a server instead of being able to manually or automatically provision and scale up new web servers.</span></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>So, there's some pros and cons to using SQLite in production. I think that the pros are valid, but the cons
+must also be taken into consideration. The recent push for using SQLite in production isn't necessarily a bad
+direction, but shouldn't be blindly followed. There's a lot of factors that go into deciding what database
+engine to use. I think that SQLite is a great choice for smaller applications that don't have a lot of traffic.
+It is also a good choice when architecture simplicity is a concern. Just make sure that you're weighing all of
+your options and understand the consequences and benefits of your choices. There's no one size fits all solution
+in this case. Also keep in mind that a lot of platforms will have a free tier or a cheap tier for managed database
+engines. You can get a lot of value out of these services and it will be much easier to scale up in the future
+if you need to. I think that the biggest concern is the lack of High Availability This is a deal breaker for most
+applications that are going to be deployed in a production setting. However, for non-revenue generating applications
+or applications that are not mission critical, SQLite could be a good choice.</p>
+
+
+                        <div id="disqus_thread"></div>
+                        <script>
+                            var disqus_config = function () {
+                              this.page.identifier = "using-sqlite-in-production";
+                            };
+                            (function() {
+                              var d = document, s = d.createElement('script');
+                              s.src = 'https://driftingruby.disqus.com/embed.js';
+                              s.setAttribute('data-timestamp', +new Date());
+                              (d.head || d.body).appendChild(s);
+                            })();
+                        </script>
+                        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="mt-32">
+  <div class="sm:px-8">
+    <div class="mx-auto max-w-7xl lg:px-8">
+      <div class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+              <div class="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <a href="/articles.html" class="transition hover:text-rose-800 dark:hover:text-teal-400">Articles</a>
+                <a href="/projects.html" class="transition hover:text-rose-800 dark:hover:text-teal-400">Projects</a>
+              </div>
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">
+                © 2023 Kimura Innovations, LLC.
+                All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
+
+

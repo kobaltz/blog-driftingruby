@@ -5,10 +5,146 @@
   <id>https://blog.driftingruby.com/articles</id>
   <link href="https://blog.driftingruby.com/articles"/>
   <link href="https://blog.driftingruby.com/feed.xml" rel="self"/>
-  <updated>2023-05-05T20:00:00-04:00</updated>
+  <updated>2023-09-30T22:46:00-04:00</updated>
   <author>
     <name>Dave Kimura</name>
   </author>
+  <entry>
+    <title>Using SQLite in Production</title>
+    <link rel="alternate" href="https://blog.driftingruby.com/articles/2023/10/01/using-sqlite-in-production.html"/>
+    <id>https://blog.driftingruby.com/articles/2023/10/01/using-sqlite-in-production.html</id>
+    <published>2023-09-30T22:46:00-04:00</published>
+    <updated>2023-10-01T00:56:23-04:00</updated>
+    <author>
+      <name>Dave Kimura</name>
+    </author>
+    <content type="html">
+&lt;p&gt;So there is a recent push on using SQLite in production, but there's also little talks around
+the pros and cons of doing so. This article will try to cover the pros and cons of using SQLite
+in production.&lt;/p&gt;
+
+&lt;p&gt;To start, there's some value in asking ChatGTP what they think about using SQLite in production.
+So, the below information is from ChatGPT and it has some interesting points. However, some of these
+points are flawed and I don't agree with them. So, this is another example where you must take
+everything with a grain of salt when it comes to generative AI content.&lt;/p&gt;
+
+&lt;p&gt;My responses will be in red next to the points made by ChatGPT.&lt;/p&gt;
+
+&lt;h2 id="pros-of-using-sqlite-in-production"&gt;Pros of Using SQLite in Production:&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Simplicity and Maintenance:&lt;/strong&gt; SQLite requires no separate server process or system to operate.
+Its serverless nature makes it easy to set up, backup, and maintain.
+&lt;span style="color:red"&gt;Keep in mind that this is requiring you to install the sqlite service
+on the server that will be using the database. This isn't a big deal as the &lt;code&gt;sqlite3&lt;/code&gt; binary
+is about 4MB. Though, it doesn't run as a service so it is simple to manage.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Portability:&lt;/strong&gt; All the data in an SQLite database is stored in a single file, making it extremely
+easy to transfer, copy, or backup.
+&lt;span style="color:red"&gt;This is true. However, you may want to be careful in situations where
+you could run out of disk space. Make sure that you have proper monitoring in place on the server. Also,
+while I've never confirmed that this could be an issue, but this is also putting all of your eggs in
+one basket. If there was ever an issue with the file being corrupted then it could be a total loss.
+Again, I've never seen this happen, but I also don't use SQLite enough to have experiened this.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Low Resource Footprint:&lt;/strong&gt; It’s lightweight and requires minimal memory, making it suitable for
+devices with limited resources like IoT devices or mobile applications.
+&lt;span style="color:red"&gt;The IoT devices and mobile applications is where I have seen this the
+most. While a default Ruby on Rails application does come with SQLite as the default database
+engine, typically it isn't seen in a production setting.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Consistent Performance:&lt;/strong&gt; For applications with a moderate load and where the read operations far
+outnumber the write operations, SQLite can deliver consistent and fast performance.
+&lt;span style="color:red"&gt;There's no network hops to worry about. Optimized SQL queries are often
+not the slow point of the applicaton. Even with network latency it's often a tiny amount such that
+you won't notice. If we're talking about a huge application that's service millions of requests
+per second then these network hops could add up with a traditional database.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;ACID Compliant:&lt;/strong&gt; SQLite transactions are ACID compliant, ensuring data integrity even after
+system crashes or power failures.
+&lt;span style="color:red"&gt;Atomic, consistent, isolated, and durable (ACID). It's true that SQLite
+has come a long way in terms of integrity and reliability of handling the data. However, with
+system crashes or power failures, database corruptions can occur especially on systems where RAID
+systems are configured improperly. If the RAID cache is set to write-back, you get better performance
+but could end up in a situation where there is data loss or corruption.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Cross-Platform:&lt;/strong&gt; SQLite is cross-platform and can be used on all major operating systems,
+including Windows, Linux, and macOS.
+&lt;span style="color:red"&gt;In terms of deploying a Ruby on Rails application, this is kind of a moot
+point as we will typically not change the platform the application is hosted on.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Free and Open-Source:&lt;/strong&gt; SQLite is free to use and is released under the Public Domain license,
+which means it can be used for any purpose, including commercial applications.
+&lt;span style="color:red"&gt;The same could be said for MySQL (or MariaDB) and PostgreSQL. MySQL is GPL licensed
+which probably doesn't make a difference if you're hosting your own application and not distributing it.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;No Configuration:&lt;/strong&gt; SQLite doesn’t require any configuration or setup, making it easy to
+use for beginners.
+&lt;span style="color:red"&gt;Yes, properly configuring a MySQL or PostgreSQL instance can be difficult
+and should be done properly for optimal performance. However, using a managed service with AWS,
+GCP, Digital Ocean, Azure, etc. will often have a decent configuration that you don't need to
+worry about.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;No Dependencies:&lt;/strong&gt; SQLite doesn’t have any dependencies, which means it can be used in any
+programming language or framework.
+&lt;span style="color:red"&gt;While MySQL and PostgreSQL have dependencies and you'll need to install
+some libraries on the server, they're well documented steps and usually not a big deal.&lt;/span&gt;&lt;/p&gt;
+
+&lt;h2 id="cons-of-using-sqlite-in-production"&gt;Cons of Using SQLite in Production:&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Concurrency Issues:&lt;/strong&gt; SQLite is not ideal for applications with a high level of concurrent write
+operations. It locks the entire database during a write operation, which can cause a bottleneck.
+&lt;span style="color:red"&gt;If we're working on a single threaded application since we're talking about
+smaller applications without too much traffic, this will not really be an issue. However, it does
+bring up a good point for any kind of background workers that occur asynchronously. Even though
+SQLite does a good job at handling transactions, it is easy to get ourselves into situations of
+Deadlocks when background jobs are trying to write to the database at the same time.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Not Suited for Large Databases:&lt;/strong&gt; While SQLite supports database files up to 140 TB, it’s generally
+not the best choice for very large datasets due to potential performance issues.
+&lt;span style="color:red"&gt;Most databases will never reach 140TB. But this does not talk to file system limits.
+This is really a moot point since modern file systems exceed SQLite's limits, but if you're file system
+was improperly set (to something like Fat32), then you could easily reach the 4GB limit. Most likely,
+if your database was even getting to a fraction of this size, you'll have other issues to be concerned with;
+system resources, performance issues, etc.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Limited Built-in Features:&lt;/strong&gt; Unlike more robust RDBMS like PostgreSQL or MySQL, SQLite doesn’t
+have a wide range of built-in tools or support for stored procedures, right out of the box.
+&lt;span style="color:red"&gt;It supports the important ones like JSON data types. Typically, we don't use
+stored procedures in Ruby on Rails applications since the ActiveRecord ORM is powerful enough in most cases.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Limited Security:&lt;/strong&gt; SQLite doesn’t have built-in support for user management or access control,
+making it less secure than other RDBMS.
+&lt;span style="color:red"&gt;While this can be a critical aspect in some scenarios, the Ruby on Rails applications
+will likely not need this level of access control. However, it does speak to the vulnerability of the database
+as it will be much easier to make a copy of if the system is ever breached. In a traditional deployment, there's
+still nothing that could really stop the attacker if they gained access to the machine, but it does offer
+some levels of obfuscation if they don't know about how Rails handles credentials. But, the reality is that
+if a bad actor has gained access to your machine, all bets are already off and you're in a very bad situation.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;No Client-Server Model:&lt;/strong&gt; SQLite doesn’t have a client-server model, which means it can’t be
+accessed by multiple users at the same time.
+&lt;span style="color:red"&gt;This is going to be a big issue if High Availability is a concern. Typically, we will
+have a load balancer as the SSL termination point and it will route the traffic to one of the available web
+servers. This is a deal breaker in many situations as using SQLite in a production setting could mean that
+you have downtime during deployments. You lose the ability for rolling deployments and have basically put
+all eggs in one basket. Depending on your deployment strategy, it could also mean that you're having to maintain
+a server instead of being able to manually or automatically provision and scale up new web servers.&lt;/span&gt;&lt;/p&gt;
+
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;So, there's some pros and cons to using SQLite in production. I think that the pros are valid, but the cons
+must also be taken into consideration. The recent push for using SQLite in production isn't necessarily a bad
+direction, but shouldn't be blindly followed. There's a lot of factors that go into deciding what database
+engine to use. I think that SQLite is a great choice for smaller applications that don't have a lot of traffic.
+It is also a good choice when architecture simplicity is a concern. Just make sure that you're weighing all of
+your options and understand the consequences and benefits of your choices. There's no one size fits all solution
+in this case. Also keep in mind that a lot of platforms will have a free tier or a cheap tier for managed database
+engines. You can get a lot of value out of these services and it will be much easier to scale up in the future
+if you need to. I think that the biggest concern is the lack of High Availability This is a deal breaker for most
+applications that are going to be deployed in a production setting. However, for non-revenue generating applications
+or applications that are not mission critical, SQLite could be a good choice.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Running Meilisearch</title>
     <link rel="alternate" href="https://blog.driftingruby.com/articles/2023/05/06/running-meilisearch.html"/>
@@ -361,79 +497,6 @@ ok? (y/N): y
 Receiving (-&amp;gt;tcp:some-external-ip:65250)..
  80%|█████████████████▏               | 859M/1.07G [00:04&amp;lt;00:01, 206MB/s]
 &lt;/code&gt;&lt;/pre&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Let's Encrypt Wildcard Cert</title>
-    <link rel="alternate" href="https://blog.driftingruby.com/articles/2021/02/10/lets-encrypt-wildcard-cert.html"/>
-    <id>https://blog.driftingruby.com/articles/2021/02/10/lets-encrypt-wildcard-cert.html</id>
-    <published>2021-02-09T19:00:00-05:00</published>
-    <updated>2023-02-18T01:02:12-05:00</updated>
-    <author>
-      <name>Dave Kimura</name>
-    </author>
-    <content type="html">&lt;p&gt;I'm writing this more as documentation for myself as I have several domains which I often use as playgrounds for certain things. This could be a kubernetes environment or a docker cluster where I have several applications deployed, but don't want to set up an nginx site for each one of the apps that I deploy.&lt;/p&gt;
-
-&lt;p&gt;Recently, I found out about Portainer for managing a docker environment. Think of this as a kubernetes-lite. This isn't good for any kind of production use case, but does have some benefits for at home management of a local docker instance.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/articles/2021/02/10/lets-encrypt-wildcard-cert/PNG-image-90C9A493911C-1.png" alt="" /&gt;&lt;/p&gt;
-
-&lt;p&gt;So in this illustration, we have a request coming in on 443. This request could be using the domain name &lt;code&gt;c1.mydomain.com&lt;/code&gt; and there could be another request coming in from &lt;code&gt;c2.mydomain.com&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Previously, you would have a certificate for both subdomains and would need to set up the appropriate port forwarding for each subdomain to the appropriate server. This is a huge pain, so, instead, this is where a wildcard certificate can come in handy.&lt;/p&gt;
-
-&lt;p&gt;In this particular scenario, I have an nginx proxy which will be used to route all of the traffic coming in to my network. This is handy because I can use this reverse proxy for SSL termination and also routing the traffic to various servers based on the domain name. This doesn't have to be a powerful server. You could even use a Raspberry Pi to route this traffic. Again, this is for a home server and not really production grade.&lt;/p&gt;
-
-&lt;p&gt;You will need some prerequisites. And I also use CloudFlare's DNS for handling these wildcard domains. This is nice because certbot and cloudflare play pretty nicely to automatically verify the challenges via their API.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;apt install certbot letsencrypt python3-certbot-dns-cloudflare
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you already have certbot and the necessary extensions installed, you can simply run this script to get a wildcard certificate.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo certbot certonly \
-     --cert-name mydomain.com \
-     --dns-cloudflare \
-     --dns-cloudflare-credentials /etc/letsencrypt/cloudflareapi.cfg \
-     --server https://acme-v02.api.letsencrypt.org/directory \
-     -d "*.mydomain.com" \
-     -d mydomain.com
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So, now we can configure our nginx proxy to take any request from this domain and forward it over to my docker host.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;server {
-  server_name *.mydomain.com;
-  server_name ~^(?&amp;lt;subdomain&amp;gt;.+)\.mydomain\.com$;
-  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-  # proxy_next_upstream error timeout http_502;
-  location / {
-    proxy_pass http://DOCKER_HOST_IP_ADDRESS;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection $connection_upgrade;
-    proxy_buffering off;
-  }
-  listen 443 ssl;
-  ssl_certificate /etc/letsencrypt/live/mydomain.com/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/mydomain.com/privkey.pem;
-  include /etc/letsencrypt/options-ssl-nginx.conf;
-  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-}
-
-server {
-  return 301 https://$host$request_uri;
-  listen 80 ;
-  listen [::]:80 ;
-  server_name *.mydomain.com;
-  server_name ~^(?&amp;lt;subdomain&amp;gt;.+)\.mydomain\.com$;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In another blog article, I'll describe how I set up the Docker host to take in these requests from the nginx server.&lt;/p&gt;
 </content>
   </entry>
 </feed>
