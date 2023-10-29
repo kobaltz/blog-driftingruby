@@ -5,10 +5,162 @@
   <id>https://blog.driftingruby.com/articles</id>
   <link href="https://blog.driftingruby.com/articles"/>
   <link href="https://blog.driftingruby.com/feed.xml" rel="self"/>
-  <updated>2023-09-30T22:46:00-04:00</updated>
+  <updated>2023-10-28T21:41:00-04:00</updated>
   <author>
     <name>Dave Kimura</name>
   </author>
+  <entry>
+    <title>Using Ansible to Update Kamal Servers</title>
+    <link rel="alternate" href="https://blog.driftingruby.com/articles/2023/10/29/using-ansible-to-update-kamal-servers.html"/>
+    <id>https://blog.driftingruby.com/articles/2023/10/29/using-ansible-to-update-kamal-servers.html</id>
+    <published>2023-10-28T21:41:00-04:00</published>
+    <updated>2023-10-28T22:09:13-04:00</updated>
+    <author>
+      <name>Dave Kimura</name>
+    </author>
+    <content type="html">&lt;p&gt;I've been using Kamal recently and it's been a great experience. It takes a lot of the headaches
+out of having to wait for a deployment to finish. Previously, I was hosting &lt;a href="https://www.driftingruby.com"&gt;Drifting Ruby&lt;/a&gt;
+on AWS with Elastic Beanstalk. This was a great solution for a long time as I didn't have to
+worry about the servers and it set up a lot of the networking for me. However, there were some pain points
+with this process and I have been wanting to switch to something new for a while. When I first heard about
+MRSK (now Kamal), I was excited! Ruby on Rails applications were getting a first class citizen deployment
+solution. The networking and infrastructure side of things hasn't ever been an issue for me since I initially
+came from that kind of background. However, I was initially looking for something easy to use that gave a bit
+of flexibility. I didn't want to go the Heroku route since pricing was a concern early on and AWS offers Reserved
+Instances which can save a significant amount.&lt;/p&gt;
+
+&lt;p&gt;One of the drawbacks with Kamal is that it doesn't have a built in way to update the servers. This is where
+Ansible comes in. Ansible is a tool that allows you to automate server configuration and deployment. But, in
+our case, we are going to use it to update our servers. This is a great solution for me since I already had some
+familiarity with Ansible and it's a great tool to have in your toolbelt. I need to look up some Ansible tricks a
+bit more to look at full server provisioning, but this will be a good start.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt; I am performing these steps with the assumption that you have already set up your Kamal servers and have
+them running. You can check out a &lt;a href="https://www.driftingruby.com/episodes/kamal-in-github-actions"&gt;recent episode on Kamal&lt;/a&gt;
+which covers deploying with Github Actions, but I also go through the steps of setting up the servers. I also have
+an &lt;a href="https://www.driftingruby.com/episodes/deploying-with-mrsk"&gt;older episode when Kamal was called MRSK&lt;/a&gt; which
+covers setting up the servers with a managed database and load balancer.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt; This Ansible playbook is also assuming that you'll be running this on a computer that has shell access
+to the servers that you're wanting to manage.&lt;/p&gt;
+
+&lt;h2 id="setting-up-ansible"&gt;Setting up Ansible&lt;/h2&gt;
+
+&lt;p&gt;Since I am on an Apple computer, I'm going to use Homebrew to install Ansible. If you're on a different platform,
+you can check out the &lt;a href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html"&gt;Ansible installation documentation&lt;/a&gt;
+for more information.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install ansible
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="understanding-ansible"&gt;Understanding Ansible&lt;/h2&gt;
+
+&lt;p&gt;This Ansible setup is going to have two different files. The first is the &lt;code&gt;inventory&lt;/code&gt; file which will contain
+the list of servers that we want to manage. The second is the &lt;code&gt;playbook.yml&lt;/code&gt; file which will contain the
+instructions for Ansible to run.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;inventory&lt;/code&gt; file will look something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[server_group]
+app1            ansible_host=PUBLIC_IP_ADDRESS_OF_SERVER
+app2            ansible_host=PUBLIC_IP_ADDRESS_OF_SERVER
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The inventory has different groups of servers. In this case, we only have one group called &lt;code&gt;server_group&lt;/code&gt;. This
+group contains two servers. The first server is called &lt;code&gt;app1&lt;/code&gt; and the second server is called &lt;code&gt;app2&lt;/code&gt;. You can
+add as many servers as you want to this group. You can also create multiple groups if you want to manage different
+servers with different playbooks. You will want to replace the &lt;code&gt;PUBLIC_IP_ADDRESS_OF_SERVER&lt;/code&gt; with the public IP
+address of your server. This should be the same IP address that you use to SSH into your server and that you
+have set up in the Kamal &lt;code&gt;deploy.yml&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;playbook.yml&lt;/code&gt; file will look something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;---
+- name: Update and Upgrade Packages on Servers Sequentially
+  hosts: all
+  serial: 1
+  become: yes
+
+  tasks:
+    - name: Run apt update and apt upgrade on servers
+      apt:
+        update_cache: yes
+        upgrade: yes
+        cache_valid_time: 3600
+      register: apt_update
+
+    - name: Pause for 2 minutes before next server update
+      pause:
+        minutes: 2
+      when: apt_update.changed
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is a bit more complicated because we have some additional things to take into consideration. The first
+thing to note is that we are running the playbook on all servers in the inventory. This is because we want
+to update all of the servers. However, we don't want to update them all at the same time. This is where the
+&lt;code&gt;serial&lt;/code&gt; option comes in. This will tell Ansible to run the playbook on one server at a time. This is important
+because we don't want to take down our application while we are updating the servers. This could happen if
+there was an update to Docker. If we updated Docker on all of the servers at the same time, then our application
+would be down until the update was complete. This is why we want to update the servers one at a time.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;become&lt;/code&gt; option tells Ansible to run the commands as the root user. This is important because we need to
+be able to update the packages on the server. If we didn't have this option, then we would get an error when
+trying to update the packages.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;tasks&lt;/code&gt; section is where we define the tasks that we want Ansible to run. The first task is to run the
+&lt;code&gt;apt update&lt;/code&gt; and &lt;code&gt;apt upgrade&lt;/code&gt; commands. This will update all of the packages on the server. The &lt;code&gt;register&lt;/code&gt;
+option tells Ansible to store the output of the command in a variable called &lt;code&gt;apt_update&lt;/code&gt;. This will be used
+in the next task.&lt;/p&gt;
+
+&lt;p&gt;The second task is to pause for 2 minutes before running the next server update. This is important because
+we want to make sure that the server is fully updated before we update the next server. The &lt;code&gt;when&lt;/code&gt; option
+tells Ansible to only run this task if the &lt;code&gt;apt_update&lt;/code&gt; variable has changed. This will only happen if the
+server was updated. If the server was already up to date, then this task will not run.&lt;/p&gt;
+
+&lt;h2 id="running-the-ansible-playbook"&gt;Running the Ansible Playbook&lt;/h2&gt;
+
+&lt;p&gt;Now that we have our playbook and inventory files set up, we can run the playbook using the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ansible-playbook -i inventory playbook.yml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will run the playbook on all of the servers in the inventory file. You should see something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PLAY [Update and Upgrade Packages on Servers Sequentially] *********
+
+TASK [Gathering Facts] *********************************************
+ok: [app1]
+
+TASK [Run apt update and apt upgrade on servers] *******************
+ok: [app1]
+
+TASK [Pause for 2 minutes before next server update] ***************
+skipping: [app1]
+
+PLAY [Update and Upgrade Packages on Servers Sequentially] *********
+
+TASK [Gathering Facts] *********************************************
+ok: [app2]
+
+TASK [Run apt update and apt upgrade on servers] *******************
+ok: [app2]
+
+TASK [Pause for 2 minutes before next server update] ***************
+skipping: [app2]
+
+PLAY RECAP *********************************************************
+app1                       : ok=2    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+app2                       : ok=2    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see that the playbook ran on both servers and that the &lt;code&gt;apt update&lt;/code&gt; and &lt;code&gt;apt upgrade&lt;/code&gt; commands were
+run. You can also see that the &lt;code&gt;Pause for 2 minutes before next server update&lt;/code&gt; task was skipped. This is because
+the server was already up to date.&lt;/p&gt;
+
+&lt;p&gt;I hope that this helps close another gap in the Kamal deployment process. I'm looking forward to seeing what
+else is in store for Kamal and I'm excited to see what the future holds for Ruby on Rails deployments.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Using SQLite in Production</title>
     <link rel="alternate" href="https://blog.driftingruby.com/articles/2023/10/01/using-sqlite-in-production.html"/>
@@ -449,54 +601,6 @@ GitHub and another pointing to GitLab.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;In some cases, I've seen this go almost 10x faster than the amd64 emulation on the M1 chip. If you have a spare Intel/AMD machine laying around, this may be a worthwhile adventure.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Transferring Files</title>
-    <link rel="alternate" href="https://blog.driftingruby.com/articles/2022/04/08/transferring-files.html"/>
-    <id>https://blog.driftingruby.com/articles/2022/04/08/transferring-files.html</id>
-    <published>2022-04-07T20:00:00-04:00</published>
-    <updated>2023-02-18T01:04:07-05:00</updated>
-    <author>
-      <name>Dave Kimura</name>
-    </author>
-    <content type="html">&lt;p&gt;Sometimes we get into situations where we need to remotely transfer a file. This file could be large or it could be tiny. This file may be sensitive or could be of little importance. Regardless, sending this file over to a remote location could still have its challenges. What if the file is coming from a headless server? Perhaps you have some logs that you want to inspect on your local machine instead of parsing through them remotely in an ssh session. This is where &lt;a href="https://magic-wormhole.readthedocs.io"&gt;magic-wormhole&lt;/a&gt; comes into play.&lt;/p&gt;
-
-&lt;h2 id="installation"&gt;Installation&lt;/h2&gt;
-
-&lt;h3 id="macos"&gt;macOS&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;brew install magic-wormhole&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id="linux-debianubuntu"&gt;Linux (Debian/Ubuntu)&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;sudo apt install magic-wormhole&lt;/code&gt;&lt;/p&gt;
-
-&lt;h2 id="usage"&gt;Usage&lt;/h2&gt;
-
-&lt;p&gt;To send a file, you simply use the wormhole command and specify which file you wish to send.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;➜  ~ wormhole send server.log
-Sending 1.1 GB file named 'server.log'
-Wormhole code is: 5-hydraulic-snowslide
-On the other computer, please run:
-
-wormhole receive 5-hydraulic-snowslide
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now that we have specified which file we want to send, we've been provided with a "wormhole code" that we can use on the receiving end.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;wormhole receive 5-hydraulic-snowslide
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And that's all we have to do! On the receiving computer, we've downloaded the requested file! In the past, I would have used &lt;code&gt;scp&lt;/code&gt; or &lt;code&gt;ftp&lt;/code&gt; but remembering the syntax, while isn't too difficult, can prove to be challenging at times especially if nonstandard ports are used or if ports aren't opened up on the firewall to make the connection.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;➜  ~ wormhole receive 5-hydraulic-snowslide
-Receiving file (1.1 GB) into: server.log
-ok? (y/N): y
-Receiving (-&amp;gt;tcp:some-external-ip:65250)..
- 80%|█████████████████▏               | 859M/1.07G [00:04&amp;lt;00:01, 206MB/s]
-&lt;/code&gt;&lt;/pre&gt;
 </content>
   </entry>
 </feed>

@@ -1,0 +1,274 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Using Ansible to Update Kamal Servers</title>
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <script src="/javascripts/site.js"></script>
+  </head>
+  <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+    <div class="fixed inset-0 flex justify-center sm:px-8">
+      <div class="flex w-full max-w-7xl lg:px-8">
+        <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+      </div>
+    </div>
+    <div class="relative">
+      <header class="pointer-events-none relative z-50 flex flex-col">
+  <div class="top-0 z-10 h-16 pt-6">
+    <div class="sm:px-8 top-[var(--header-top,theme(spacing.6))] w-full">
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="relative flex gap-4">
+              <div class="flex flex-1">
+                <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
+                  <a aria-label="Home" class="pointer-events-auto" href="/">
+                    <img alt="" sizes="2.25rem"
+                      src="/images/profile.png"
+                      width="512" height="512" decoding="async" data-nimg="1"
+                      class="rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 h-9 w-9"
+                      style="color: transparent;"></a></div>
+              </div>
+              <div class="flex flex-1 justify-end md:justify-center">
+                <nav class="pointer-events-auto md:block">
+                  <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                    <li>
+                      <a href="/" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">About</a>
+                    </li>
+                    <li>
+                      <a href="/articles.html" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">Articles</a>
+                    </li>
+                    <li>
+                      <a href="/projects.html" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">Projects</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex justify-end md:flex-1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <main>
+        <div class="sm:px-8 mt-16 lg:mt-32">
+          <div class="mx-auto max-w-7xl lg:px-8">
+            <div class="relative px-4 sm:px-8 lg:px-12">
+              <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="xl:relative">
+                  <div class="mx-auto max-w-2xl">
+                    <a href="/articles.html" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                        <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </a>
+                    <article>
+                      <header class="flex flex-col">
+                        <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                          Using Ansible to Update Kamal Servers
+                        </h1>
+                        <time datetime="2022-09-05" class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500">
+                          <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+                          <span class="ml-3">October 29, 2023</span>
+                        </time>
+                      </header>
+                      <div class="mt-8 prose dark:prose-invert">
+                        <p>I've been using Kamal recently and it's been a great experience. It takes a lot of the headaches
+out of having to wait for a deployment to finish. Previously, I was hosting <a href="https://www.driftingruby.com">Drifting Ruby</a>
+on AWS with Elastic Beanstalk. This was a great solution for a long time as I didn't have to
+worry about the servers and it set up a lot of the networking for me. However, there were some pain points
+with this process and I have been wanting to switch to something new for a while. When I first heard about
+MRSK (now Kamal), I was excited! Ruby on Rails applications were getting a first class citizen deployment
+solution. The networking and infrastructure side of things hasn't ever been an issue for me since I initially
+came from that kind of background. However, I was initially looking for something easy to use that gave a bit
+of flexibility. I didn't want to go the Heroku route since pricing was a concern early on and AWS offers Reserved
+Instances which can save a significant amount.</p>
+
+<p>One of the drawbacks with Kamal is that it doesn't have a built in way to update the servers. This is where
+Ansible comes in. Ansible is a tool that allows you to automate server configuration and deployment. But, in
+our case, we are going to use it to update our servers. This is a great solution for me since I already had some
+familiarity with Ansible and it's a great tool to have in your toolbelt. I need to look up some Ansible tricks a
+bit more to look at full server provisioning, but this will be a good start.</p>
+
+<p><strong>Note</strong> I am performing these steps with the assumption that you have already set up your Kamal servers and have
+them running. You can check out a <a href="https://www.driftingruby.com/episodes/kamal-in-github-actions">recent episode on Kamal</a>
+which covers deploying with Github Actions, but I also go through the steps of setting up the servers. I also have
+an <a href="https://www.driftingruby.com/episodes/deploying-with-mrsk">older episode when Kamal was called MRSK</a> which
+covers setting up the servers with a managed database and load balancer.</p>
+
+<p><strong>Note</strong> This Ansible playbook is also assuming that you'll be running this on a computer that has shell access
+to the servers that you're wanting to manage.</p>
+
+<h2 id="setting-up-ansible">Setting up Ansible</h2>
+
+<p>Since I am on an Apple computer, I'm going to use Homebrew to install Ansible. If you're on a different platform,
+you can check out the <a href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html">Ansible installation documentation</a>
+for more information.</p>
+
+<pre><code>brew install ansible
+</code></pre>
+
+<h2 id="understanding-ansible">Understanding Ansible</h2>
+
+<p>This Ansible setup is going to have two different files. The first is the <code>inventory</code> file which will contain
+the list of servers that we want to manage. The second is the <code>playbook.yml</code> file which will contain the
+instructions for Ansible to run.</p>
+
+<p>The <code>inventory</code> file will look something like this:</p>
+
+<pre><code>[server_group]
+app1            ansible_host=PUBLIC_IP_ADDRESS_OF_SERVER
+app2            ansible_host=PUBLIC_IP_ADDRESS_OF_SERVER
+</code></pre>
+
+<p>The inventory has different groups of servers. In this case, we only have one group called <code>server_group</code>. This
+group contains two servers. The first server is called <code>app1</code> and the second server is called <code>app2</code>. You can
+add as many servers as you want to this group. You can also create multiple groups if you want to manage different
+servers with different playbooks. You will want to replace the <code>PUBLIC_IP_ADDRESS_OF_SERVER</code> with the public IP
+address of your server. This should be the same IP address that you use to SSH into your server and that you
+have set up in the Kamal <code>deploy.yml</code> file.</p>
+
+<p>The <code>playbook.yml</code> file will look something like this:</p>
+
+<pre><code>---
+- name: Update and Upgrade Packages on Servers Sequentially
+  hosts: all
+  serial: 1
+  become: yes
+
+  tasks:
+    - name: Run apt update and apt upgrade on servers
+      apt:
+        update_cache: yes
+        upgrade: yes
+        cache_valid_time: 3600
+      register: apt_update
+
+    - name: Pause for 2 minutes before next server update
+      pause:
+        minutes: 2
+      when: apt_update.changed
+</code></pre>
+
+<p>This is a bit more complicated because we have some additional things to take into consideration. The first
+thing to note is that we are running the playbook on all servers in the inventory. This is because we want
+to update all of the servers. However, we don't want to update them all at the same time. This is where the
+<code>serial</code> option comes in. This will tell Ansible to run the playbook on one server at a time. This is important
+because we don't want to take down our application while we are updating the servers. This could happen if
+there was an update to Docker. If we updated Docker on all of the servers at the same time, then our application
+would be down until the update was complete. This is why we want to update the servers one at a time.</p>
+
+<p>The <code>become</code> option tells Ansible to run the commands as the root user. This is important because we need to
+be able to update the packages on the server. If we didn't have this option, then we would get an error when
+trying to update the packages.</p>
+
+<p>The <code>tasks</code> section is where we define the tasks that we want Ansible to run. The first task is to run the
+<code>apt update</code> and <code>apt upgrade</code> commands. This will update all of the packages on the server. The <code>register</code>
+option tells Ansible to store the output of the command in a variable called <code>apt_update</code>. This will be used
+in the next task.</p>
+
+<p>The second task is to pause for 2 minutes before running the next server update. This is important because
+we want to make sure that the server is fully updated before we update the next server. The <code>when</code> option
+tells Ansible to only run this task if the <code>apt_update</code> variable has changed. This will only happen if the
+server was updated. If the server was already up to date, then this task will not run.</p>
+
+<h2 id="running-the-ansible-playbook">Running the Ansible Playbook</h2>
+
+<p>Now that we have our playbook and inventory files set up, we can run the playbook using the following command:</p>
+
+<pre><code>ansible-playbook -i inventory playbook.yml
+</code></pre>
+
+<p>This will run the playbook on all of the servers in the inventory file. You should see something like this:</p>
+
+<pre><code>PLAY [Update and Upgrade Packages on Servers Sequentially] *********
+
+TASK [Gathering Facts] *********************************************
+ok: [app1]
+
+TASK [Run apt update and apt upgrade on servers] *******************
+ok: [app1]
+
+TASK [Pause for 2 minutes before next server update] ***************
+skipping: [app1]
+
+PLAY [Update and Upgrade Packages on Servers Sequentially] *********
+
+TASK [Gathering Facts] *********************************************
+ok: [app2]
+
+TASK [Run apt update and apt upgrade on servers] *******************
+ok: [app2]
+
+TASK [Pause for 2 minutes before next server update] ***************
+skipping: [app2]
+
+PLAY RECAP *********************************************************
+app1                       : ok=2    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+app2                       : ok=2    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+</code></pre>
+
+<p>You can see that the playbook ran on both servers and that the <code>apt update</code> and <code>apt upgrade</code> commands were
+run. You can also see that the <code>Pause for 2 minutes before next server update</code> task was skipped. This is because
+the server was already up to date.</p>
+
+<p>I hope that this helps close another gap in the Kamal deployment process. I'm looking forward to seeing what
+else is in store for Kamal and I'm excited to see what the future holds for Ruby on Rails deployments.</p>
+
+
+                        <div id="disqus_thread"></div>
+                        <script>
+                            var disqus_config = function () {
+                              this.page.identifier = "using-ansible-to-update-kamal-servers";
+                            };
+                            (function() {
+                              var d = document, s = d.createElement('script');
+                              s.src = 'https://driftingruby.disqus.com/embed.js';
+                              s.setAttribute('data-timestamp', +new Date());
+                              (d.head || d.body).appendChild(s);
+                            })();
+                        </script>
+                        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="mt-32">
+  <div class="sm:px-8">
+    <div class="mx-auto max-w-7xl lg:px-8">
+      <div class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+              <div class="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <a href="/articles.html" class="transition hover:text-rose-800 dark:hover:text-teal-400">Articles</a>
+                <a href="/projects.html" class="transition hover:text-rose-800 dark:hover:text-teal-400">Projects</a>
+              </div>
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">
+                © 2023 Kimura Innovations, LLC.
+                All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
+
+
