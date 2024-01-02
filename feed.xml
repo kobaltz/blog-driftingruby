@@ -5,10 +5,170 @@
   <id>https://blog.driftingruby.com/articles</id>
   <link href="https://blog.driftingruby.com/articles"/>
   <link href="https://blog.driftingruby.com/feed.xml" rel="self"/>
-  <updated>2023-10-28T21:41:00-04:00</updated>
+  <updated>2023-12-31T23:43:00-05:00</updated>
   <author>
     <name>Dave Kimura</name>
   </author>
+  <entry>
+    <title>Self Hosted Github Actions Runner</title>
+    <link rel="alternate" href="https://blog.driftingruby.com/articles/2024/01/01/self-hosted-github-actions-runner.html"/>
+    <id>https://blog.driftingruby.com/articles/2024/01/01/self-hosted-github-actions-runner.html</id>
+    <published>2023-12-31T23:43:00-05:00</published>
+    <updated>2024-01-01T21:40:09-05:00</updated>
+    <author>
+      <name>Dave Kimura</name>
+    </author>
+    <content type="html">&lt;p&gt;The spark of this blog post came from a &lt;a href="https://twitter.com/dhh/status/1741838676487737763"&gt;tweet&lt;/a&gt; from DHH about
+the default Rails 8 having a Github Actions workflow.&lt;/p&gt;
+
+&lt;p&gt;Github Actions is a great tool for automating your workflows. It's built into Github and is free for public repositories.
+However, if you have a private repository, you will need to pay for Github Actions. This can be a bit expensive if you
+have a lot of repositories. There is a way to reduce the cost of Github Actions by using self hosted runners. This
+allows you to run your Github Actions workflows on your own servers. This can be a great way to reduce the cost of
+Github Actions.&lt;/p&gt;
+
+&lt;p&gt;To be fair, Github Actions does have a free tier for private repositories. However, this free tier only allows for
+2000 minutes of build time per month. This can be a bit limiting if you have a lot of repositories or if you have
+a lot of builds.&lt;/p&gt;
+
+&lt;p&gt;The good news is that you can set up your own self hosted runner for free. This will allow you to run your Github
+Actions workflows on your own servers. This can be a great way to reduce the cost of Github Actions.&lt;/p&gt;
+
+&lt;h2 id="setting-up-a-self-hosted-runner"&gt;Setting up a Self Hosted Runner&lt;/h2&gt;
+
+&lt;p&gt;To set up a self hosted runner, you will need to have a server that you can SSH into. This can be a server that you
+already have or it can be a new server that you create. It could also be something like a Raspberry Pi or a Virtual
+Machine hosted in the cloud.&lt;/p&gt;
+
+&lt;p&gt;To start, we will use Debian 12 (Bookworm) as our base operating system. This is the latest version of Debian and
+it is a great choice for a server. It is lightweight and it is easy to install. Once you have a running Debian 12 server,
+we can SSH into it and update and install some packages.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apt update &amp;amp;&amp;amp; apt upgrade -y &amp;amp;&amp;amp; \
+apt-get install -y \
+    curl nano git gnupg apt-transport-https ca-certificates \
+    software-properties-common make gcc autoconf patch \
+    build-essential rustc libssl-dev libyaml-dev libreadline6-dev \
+    zlib1g-dev libgmp-dev libncurses5-dev libffi-dev libgdbm6 \
+    libgdbm-dev libdb-dev uuid-dev htop libpq-dev
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We'll then create a new user for our runner so that we don't have to run everything as root.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;adduser --quiet --disabled-password --shell /bin/bash --home /home/developer --gecos "Developer" developer
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The runner will need to be able to run Docker containers, so we'll need to install Docker.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+"deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+"$(. /etc/os-release &amp;amp;&amp;amp; echo "$VERSION_CODENAME")" stable" | \
+tee /etc/apt/sources.list.d/docker.list &amp;gt; /dev/null
+apt update &amp;amp;&amp;amp; apt install docker-ce -y
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And the &lt;code&gt;developer&lt;/code&gt; user will need to be able to run Docker containers without &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;usermod -aG docker developer
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since I typically use esbuild on my projects, It'll be best to install nodejs and yarn.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | \
+    gpg --dearmor -o /etc/apt/nodesource.gpg &amp;amp;&amp;amp; \
+    echo "deb [signed-by=/etc/apt/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | \
+    tee /etc/apt/sources.list.d/nodesource.list &amp;amp;&amp;amp; \
+    apt update &amp;amp;&amp;amp; apt install nodejs -y &amp;amp;&amp;amp; \
+    npm install --global yarn
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can then log in as the &lt;code&gt;developer&lt;/code&gt; user to install Ruby.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;su - developer
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On my development machines, I prefer to use &lt;code&gt;asdf&lt;/code&gt;, but for a runner, &lt;code&gt;rbenv&lt;/code&gt; is a great choice.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' &amp;gt;&amp;gt; ~/.bashrc
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+git -C "$(rbenv root)"/plugins/ruby-build pull
+echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' | tee -a ~/.bashrc
+source ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can then install the Github Actions Runner. You can check for the latest versions on the &lt;a href="https://github.com/actions/runner/releases"&gt;Github Actions Runner
+Releases&lt;/a&gt; page.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir actions-runner &amp;amp;&amp;amp; cd actions-runner
+export RUNNER_VERSION="2.311.0"
+curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You'll need to register this runner, so be sure to check out the steps below on how to do that. You'll need to run the
+registration script in the folder that you extracted the runner to. I keep the default settings in wizard of the script.&lt;/p&gt;
+
+&lt;p&gt;To register the runner, head over to one of your projects on Github and select the Actions &amp;gt; Runners. Then click on the
+&lt;code&gt;New self-hosted runner&lt;/code&gt; button. Select your operating system and architecture.&lt;/p&gt;
+
+&lt;p&gt;Under the &lt;code&gt;Configure&lt;/code&gt; section, there will be a script to run that starts with &lt;code&gt;./config.sh&lt;/code&gt; and ends with a token. Copy
+this script and run it on your server. This will register the runner with Github. This will need to be done in the folder
+that you extracted the runner to.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# ./config &amp;lt;- run the config registration script from below here.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="installing-ruby"&gt;Installing Ruby&lt;/h2&gt;
+
+&lt;p&gt;We can now install our Ruby version. I've updated all of my projects to Ruby 3.3.0, so that's the version that I'll be
+using. However, modify this as needed. This is also assuming that you're installing this on an amd64 machine. If you're
+using a Raspberry Pi or something else, you'll need to modify the path. It's also important to let the runner know that
+we've installed Ruby so we will touch a file to let the runner know that this Ruby version is present.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export RUBY_VERSION="3.3.0"
+ruby-build ${RUBY_VERSION} /home/developer/actions-runner/_work/_tool/Ruby/${RUBY_VERSION}/x64
+touch /home/developer/actions-runner/_work/_tool/Ruby/${RUBY_VERSION}/x64.complete
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="starting-the-runner-at-boot"&gt;Starting the Runner at boot&lt;/h2&gt;
+
+&lt;p&gt;We'll edit the &lt;code&gt;/etc/systemd/system/github-runner.service&lt;/code&gt; file and place the following contents in it. This will
+allow us to start the runner at boot.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[Unit]
+Description=GitHub Runner
+After=network.target
+
+[Service]
+User=developer
+WorkingDirectory=/home/developer/actions-runner
+ExecStart=/home/developer/actions-runner/run.sh
+Restart=always
+RestartSec=3
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="reload-systemd-enable-and-start-the-service"&gt;Reload systemd, enable and start the service&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;systemctl daemon-reload
+systemctl enable github-runner
+systemctl start github-runner
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;We now have a self hosted runner that we can use for our Github Actions workflows. This will allow us to run our
+workflows on our own servers. This can be a great way to reduce the cost of Github Actions. If you have any questions
+or comments, please feel free to reach out. I'm always happy to help.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Using Ansible to Update Kamal Servers</title>
     <link rel="alternate" href="https://blog.driftingruby.com/articles/2023/10/29/using-ansible-to-update-kamal-servers.html"/>
@@ -543,64 +703,6 @@ origin  git@github.com:kobaltz/blog-driftingruby.git (push)
 GitHub and another pointing to GitLab.&lt;/p&gt;
 
 &lt;p&gt;By consolidating your code base and keeping multiple repositories up to date, you can simplify your workflow and save time. Give this approach a try and see how it works for you. Happy coding!&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Docker Builds are slow on M1</title>
-    <link rel="alternate" href="https://blog.driftingruby.com/articles/2022/04/09/docker-builds-are-slow-on-m1.html"/>
-    <id>https://blog.driftingruby.com/articles/2022/04/09/docker-builds-are-slow-on-m1.html</id>
-    <published>2022-04-08T20:00:00-04:00</published>
-    <updated>2023-02-18T01:05:28-05:00</updated>
-    <author>
-      <name>Dave Kimura</name>
-    </author>
-    <content type="html">&lt;p&gt;This is a neat Docker trick for those who have an ARM development machine (Apple M1), but sometimes need to build x86/amd64 images locally to push up to a registry.&lt;/p&gt;
-
-&lt;p&gt;Sure, having a CI/CD platform to do this is probably ideal, but for little programs or just sometimes in general, it may be handy to know this.&lt;/p&gt;
-
-&lt;p&gt;If you have a spare Intel machine laying around, you can turn it into a build server. Get something like &lt;a href="https://docs.docker.com/engine/install/ubuntu/"&gt;Ubuntu installed&lt;/a&gt; on there and install the latest Docker. On your development machine, &lt;a href="https://www.ssh.com/academy/ssh/copy-id"&gt;copy your publish SSH key over to this build server.&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;So now you you have your server set up and you want to build your Docker image for an x86/amd64 platform. Typically, you would run a command like this below to target the platform.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker buildx build -f Dockerfile --platform linux/amd64 .
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And this will work, but what you'll notice is that this is an extremely slow process. The Apple Silicon chips are amazing and are the fastest machines I've ever used. However, when emulating the x86 instructions to build a docker image, it takes such a long time. I've seen this take over an hour on larger and more complex projects.&lt;/p&gt;
-
-&lt;p&gt;Just as an example. Here we have a very simple Ruby on Rails application that has little moving parts. I'm using things like &lt;code&gt;esbuild&lt;/code&gt; and &lt;code&gt;css-bundling&lt;/code&gt;, but nothing fancy. On the M1 chip, it took over 250 seconds to build the image.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# Apple Silicon
-[+] Building 316.4s (23/23) FINISHED
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, on a AMD 5900X server, I have a Virtual Machine running on there which has Docker installed. Running the exact same project on there took much less time.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# AMD 5900X
-[+] Building 62.3s (24/24) FINISHED
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So, the main concern here is that I do not want to interrupt my normal process on how I build images or handle things. It would be a pain to push up my code, ssh into the build server, pull it down, and then build the image. This is a lot of steps, but luckily there is a MUCH easier way to do this.&lt;/p&gt;
-
-&lt;p&gt;Docker's buildx build command has a flag that we can specify a specific builder.&lt;/p&gt;
-
-&lt;p&gt;So, we can create this builder on our local machine. The nice part about this creation is that it is idempotent, so you can run this command many times without changing the result. All we have to do is to create a builder profile and in this case I have named it &lt;code&gt;amd64_builder&lt;/code&gt;.  Since this builder is a pool of resources, I give a name to for the VM. I'm also specifying the platform that I'm building against and then pass in the SSH url for my builder machine.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker buildx create \
-  --name amd64_builder \
-  --node linux_amd64_builder \
-  --platform linux/amd64 \
-  ssh://USERNAME@IP_ADDRESS_OF_BUILDER
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now, I can build and push the image to the registry. The magical flag that we'll use is &lt;code&gt;--builder&lt;/code&gt; as we can now specify the builder VM. The rest of the buildx command is the same as we would expect.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker buildx build \
-  --builder amd64_builder \
-  --tag USERNAME/REPONAME:TAG \
-  --push .
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In some cases, I've seen this go almost 10x faster than the amd64 emulation on the M1 chip. If you have a spare Intel/AMD machine laying around, this may be a worthwhile adventure.&lt;/p&gt;
 </content>
   </entry>
 </feed>

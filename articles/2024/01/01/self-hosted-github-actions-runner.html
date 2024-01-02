@@ -1,0 +1,282 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Self Hosted Github Actions Runner</title>
+    <link href="/stylesheets/application.css" rel="stylesheet" />
+    <script src="/javascripts/site.js"></script>
+  </head>
+  <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+    <div class="fixed inset-0 flex justify-center sm:px-8">
+      <div class="flex w-full max-w-7xl lg:px-8">
+        <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
+      </div>
+    </div>
+    <div class="relative">
+      <header class="pointer-events-none relative z-50 flex flex-col">
+  <div class="top-0 z-10 h-16 pt-6">
+    <div class="sm:px-8 top-[var(--header-top,theme(spacing.6))] w-full">
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="relative flex gap-4">
+              <div class="flex flex-1">
+                <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
+                  <a aria-label="Home" class="pointer-events-auto" href="/">
+                    <img alt="" sizes="2.25rem"
+                      src="/images/profile.png"
+                      width="512" height="512" decoding="async" data-nimg="1"
+                      class="rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 h-9 w-9"
+                      style="color: transparent;"></a></div>
+              </div>
+              <div class="flex flex-1 justify-end md:justify-center">
+                <nav class="pointer-events-auto md:block">
+                  <ul class="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                    <li>
+                      <a href="/" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">About</a>
+                    </li>
+                    <li>
+                      <a href="/articles.html" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">Articles</a>
+                    </li>
+                    <li>
+                      <a href="/projects.html" class="relative block px-3 py-2 transition hover:text-rose-800 dark:hover:text-teal-400">Projects</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex justify-end md:flex-1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <main>
+        <div class="sm:px-8 mt-16 lg:mt-32">
+          <div class="mx-auto max-w-7xl lg:px-8">
+            <div class="relative px-4 sm:px-8 lg:px-12">
+              <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="xl:relative">
+                  <div class="mx-auto max-w-2xl">
+                    <a href="/articles.html" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                        <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </a>
+                    <article>
+                      <header class="flex flex-col">
+                        <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                          Self Hosted Github Actions Runner
+                        </h1>
+                        <time datetime="2022-09-05" class="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500">
+                          <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
+                          <span class="ml-3">January  1, 2024</span>
+                        </time>
+                      </header>
+                      <div class="mt-8 prose dark:prose-invert">
+                        <p>The spark of this blog post came from a <a href="https://twitter.com/dhh/status/1741838676487737763">tweet</a> from DHH about
+the default Rails 8 having a Github Actions workflow.</p>
+
+<p>Github Actions is a great tool for automating your workflows. It's built into Github and is free for public repositories.
+However, if you have a private repository, you will need to pay for Github Actions. This can be a bit expensive if you
+have a lot of repositories. There is a way to reduce the cost of Github Actions by using self hosted runners. This
+allows you to run your Github Actions workflows on your own servers. This can be a great way to reduce the cost of
+Github Actions.</p>
+
+<p>To be fair, Github Actions does have a free tier for private repositories. However, this free tier only allows for
+2000 minutes of build time per month. This can be a bit limiting if you have a lot of repositories or if you have
+a lot of builds.</p>
+
+<p>The good news is that you can set up your own self hosted runner for free. This will allow you to run your Github
+Actions workflows on your own servers. This can be a great way to reduce the cost of Github Actions.</p>
+
+<h2 id="setting-up-a-self-hosted-runner">Setting up a Self Hosted Runner</h2>
+
+<p>To set up a self hosted runner, you will need to have a server that you can SSH into. This can be a server that you
+already have or it can be a new server that you create. It could also be something like a Raspberry Pi or a Virtual
+Machine hosted in the cloud.</p>
+
+<p>To start, we will use Debian 12 (Bookworm) as our base operating system. This is the latest version of Debian and
+it is a great choice for a server. It is lightweight and it is easy to install. Once you have a running Debian 12 server,
+we can SSH into it and update and install some packages.</p>
+
+<pre><code>apt update &amp;&amp; apt upgrade -y &amp;&amp; \
+apt-get install -y \
+    curl nano git gnupg apt-transport-https ca-certificates \
+    software-properties-common make gcc autoconf patch \
+    build-essential rustc libssl-dev libyaml-dev libreadline6-dev \
+    zlib1g-dev libgmp-dev libncurses5-dev libffi-dev libgdbm6 \
+    libgdbm-dev libdb-dev uuid-dev htop libpq-dev
+</code></pre>
+
+<p>We'll then create a new user for our runner so that we don't have to run everything as root.</p>
+
+<pre><code>adduser --quiet --disabled-password --shell /bin/bash --home /home/developer --gecos "Developer" developer
+</code></pre>
+
+<p>The runner will need to be able to run Docker containers, so we'll need to install Docker.</p>
+
+<pre><code>install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+"deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+"$(. /etc/os-release &amp;&amp; echo "$VERSION_CODENAME")" stable" | \
+tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+apt update &amp;&amp; apt install docker-ce -y
+</code></pre>
+
+<p>And the <code>developer</code> user will need to be able to run Docker containers without <code>sudo</code>.</p>
+
+<pre><code>usermod -aG docker developer
+</code></pre>
+
+<p>Since I typically use esbuild on my projects, It'll be best to install nodejs and yarn.</p>
+
+<pre><code>curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | \
+    gpg --dearmor -o /etc/apt/nodesource.gpg &amp;&amp; \
+    echo "deb [signed-by=/etc/apt/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | \
+    tee /etc/apt/sources.list.d/nodesource.list &amp;&amp; \
+    apt update &amp;&amp; apt install nodejs -y &amp;&amp; \
+    npm install --global yarn
+</code></pre>
+
+<p>We can then log in as the <code>developer</code> user to install Ruby.</p>
+
+<pre><code>su - developer
+</code></pre>
+
+<p>On my development machines, I prefer to use <code>asdf</code>, but for a runner, <code>rbenv</code> is a great choice.</p>
+
+<pre><code>git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' &gt;&gt; ~/.bashrc
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+git -C "$(rbenv root)"/plugins/ruby-build pull
+echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' | tee -a ~/.bashrc
+source ~/.bashrc
+</code></pre>
+
+<p>We can then install the Github Actions Runner. You can check for the latest versions on the <a href="https://github.com/actions/runner/releases">Github Actions Runner
+Releases</a> page.</p>
+
+<pre><code>mkdir actions-runner &amp;&amp; cd actions-runner
+export RUNNER_VERSION="2.311.0"
+curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+</code></pre>
+
+<p>You'll need to register this runner, so be sure to check out the steps below on how to do that. You'll need to run the
+registration script in the folder that you extracted the runner to. I keep the default settings in wizard of the script.</p>
+
+<p>To register the runner, head over to one of your projects on Github and select the Actions &gt; Runners. Then click on the
+<code>New self-hosted runner</code> button. Select your operating system and architecture.</p>
+
+<p>Under the <code>Configure</code> section, there will be a script to run that starts with <code>./config.sh</code> and ends with a token. Copy
+this script and run it on your server. This will register the runner with Github. This will need to be done in the folder
+that you extracted the runner to.</p>
+
+<pre><code># ./config &lt;- run the config registration script from below here.
+</code></pre>
+
+<h2 id="installing-ruby">Installing Ruby</h2>
+
+<p>We can now install our Ruby version. I've updated all of my projects to Ruby 3.3.0, so that's the version that I'll be
+using. However, modify this as needed. This is also assuming that you're installing this on an amd64 machine. If you're
+using a Raspberry Pi or something else, you'll need to modify the path. It's also important to let the runner know that
+we've installed Ruby so we will touch a file to let the runner know that this Ruby version is present.</p>
+
+<pre><code>export RUBY_VERSION="3.3.0"
+ruby-build ${RUBY_VERSION} /home/developer/actions-runner/_work/_tool/Ruby/${RUBY_VERSION}/x64
+touch /home/developer/actions-runner/_work/_tool/Ruby/${RUBY_VERSION}/x64.complete
+</code></pre>
+
+<h2 id="starting-the-runner-at-boot">Starting the Runner at boot</h2>
+
+<p>We'll edit the <code>/etc/systemd/system/github-runner.service</code> file and place the following contents in it. This will
+allow us to start the runner at boot.</p>
+
+<pre><code>[Unit]
+Description=GitHub Runner
+After=network.target
+
+[Service]
+User=developer
+WorkingDirectory=/home/developer/actions-runner
+ExecStart=/home/developer/actions-runner/run.sh
+Restart=always
+RestartSec=3
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+<h2 id="reload-systemd-enable-and-start-the-service">Reload systemd, enable and start the service</h2>
+
+<pre><code>systemctl daemon-reload
+systemctl enable github-runner
+systemctl start github-runner
+</code></pre>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>We now have a self hosted runner that we can use for our Github Actions workflows. This will allow us to run our
+workflows on our own servers. This can be a great way to reduce the cost of Github Actions. If you have any questions
+or comments, please feel free to reach out. I'm always happy to help.</p>
+
+
+                        <div id="disqus_thread"></div>
+                        <script>
+                            var disqus_config = function () {
+                              this.page.identifier = "self-hosted-github-actions-runner";
+                            };
+                            (function() {
+                              var d = document, s = d.createElement('script');
+                              s.src = 'https://driftingruby.disqus.com/embed.js';
+                              s.setAttribute('data-timestamp', +new Date());
+                              (d.head || d.body).appendChild(s);
+                            })();
+                        </script>
+                        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="mt-32">
+  <div class="sm:px-8">
+    <div class="mx-auto max-w-7xl lg:px-8">
+      <div class="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-2xl lg:max-w-5xl">
+            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+              <div class="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <a href="/articles.html" class="transition hover:text-rose-800 dark:hover:text-teal-400">Articles</a>
+                <a href="/projects.html" class="transition hover:text-rose-800 dark:hover:text-teal-400">Projects</a>
+              </div>
+              <p class="text-sm text-zinc-400 dark:text-zinc-500">
+                © 2024 Kimura Innovations, LLC.
+                All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
+
+
